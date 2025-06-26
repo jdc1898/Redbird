@@ -25,6 +25,8 @@ class {{ class }} extends PanelProvider
         return $panel
             ->id('{{ panel_id }}')
             ->path('{{ panel_path }}'){{ panel_domain }}
+            ->authGuard({{ panel_id }})
+            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
