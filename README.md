@@ -2,6 +2,7 @@
 
 A comprehensive Laravel SaaS package with Filament admin panel, user management, and subscription billing.
 
+update
 ## Features
 
 - 🔥 **Filament Admin Panel** - Beautiful, modern admin interface
