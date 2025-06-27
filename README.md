@@ -1,8 +1,18 @@
 # Redbird SaaS Package
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/fullstack/redbird.svg)](https://packagist.org/packages/fullstack/redbird)
+[![Tests](https://github.com/jdc1898/Redbird/actions/workflows/auto-release.yml/badge.svg)](https://github.com/jdc1898/Redbird/actions/workflows/auto-release.yml)
+[![License](https://img.shields.io/packagist/l/fullstack/redbird.svg)](https://packagist.org/packages/fullstack/redbird)
+
 A comprehensive Laravel SaaS package with Filament admin panel, user management, and subscription billing.
 
-update
+## 🚀 Recent Updates
+
+- **v0.2.5** - Fixed Packagist version synchronization and improved auto-release workflow
+- **v0.2.4** - Enhanced Git identity configuration in CI/CD pipeline
+- **v0.2.0** - Added multi-panel support with admin, tenant, and member panels
+- **v0.1.0** - Initial release with core SaaS functionality
+
 ## Features
 
 - 🔥 **Filament Admin Panel** - Beautiful, modern admin interface
@@ -13,6 +23,10 @@ update
 - 📧 **Email Verification** - Built-in email verification system
 - 🔒 **Two-Factor Authentication** - Optional 2FA support
 - 🚀 **API Ready** - RESTful API endpoints
+- 📊 **Dashboard Widgets** - MRR charts, subscription stats, and product analytics
+- 🎨 **Customizable UI** - Publishable views and configurable themes
+- 🔧 **Automated Releases** - CI/CD pipeline with automated versioning and deployment
+- 📦 **Packagist Integration** - Automatic package updates and distribution
 
 ## Requirements
 
@@ -73,6 +87,47 @@ REDBIRD_EMAIL_VERIFICATION=true
 ### Accessing the Admin Panel
 
 Visit `/admin` (or your configured admin path) to access the Filament admin panel.
+
+### Dashboard Widgets
+
+Redbird includes several built-in dashboard widgets for SaaS analytics:
+
+- **MRR Stats Widget** - Monthly Recurring Revenue tracking
+- **MRR Chart Widget** - Visual MRR trends over time
+- **Active Subscriptions Widget** - Real-time subscription count
+- **Product Stats Widget** - Product performance metrics
+- **Price Stats Widget** - Pricing analytics
+
+### Subscription Management
+
+The package includes comprehensive subscription management:
+
+```php
+// Create a subscription
+$user->newSubscription('default', 'price_123')->create();
+
+// Check subscription status
+if ($user->subscription('default')->active()) {
+    // User has active subscription
+}
+
+// Handle subscription changes
+$user->subscription('default')->swap('price_456');
+```
+
+### Multi-Panel Architecture
+
+Redbird supports multiple Filament panels for different user types:
+
+- **Admin Panel** (`/admin`) - For super admins and system management
+- **Tenant Panel** (`/tenant`) - For tenant/organization management
+- **Member Panel** (`/member`) - For end users and customers
+
+Each panel can have its own:
+- Authentication guard
+- Domain/subdomain
+- Custom styling
+- Specific permissions
 
 ### Configuration
 
@@ -228,6 +283,42 @@ To automatically publish to Packagist:
 ```bash
 vendor/bin/phpunit
 ```
+
+## Troubleshooting
+
+### Common Issues
+
+**Packagist Version Mismatch**
+If you see "tag does not match version in composer.json" errors:
+1. Ensure composer.json version matches your latest tag
+2. Run `./scripts/release.sh` to trigger a proper release
+3. Check that the auto-release workflow completed successfully
+
+**Git Identity Errors in CI/CD**
+If GitHub Actions fails with "Author identity unknown":
+1. The workflow now configures Git identity automatically
+2. Ensure you're using the latest workflow version
+3. Check that the workflow has proper permissions
+
+**Filament Panel Not Loading**
+1. Ensure you've run `php artisan redbird:install`
+2. Check that panel providers are registered in your app
+3. Verify your `.env` configuration matches the panel settings
+
+### Support
+
+- 📧 **Email**: hello@fullstack.com
+- 🐛 **Issues**: [GitHub Issues](https://github.com/jdc1898/Redbird/issues)
+- 📖 **Documentation**: [Full Documentation](https://github.com/jdc1898/Redbird/wiki)
+
+## Roadmap
+
+- [ ] **Advanced Analytics** - More detailed SaaS metrics and reporting
+- [ ] **Multi-Currency Support** - International payment processing
+- [ ] **Advanced Billing** - Usage-based billing and metering
+- [ ] **API Documentation** - OpenAPI/Swagger documentation
+- [ ] **Mobile App Support** - React Native integration
+- [ ] **White-label Options** - Custom branding and theming
 
 ## Contributing
 
