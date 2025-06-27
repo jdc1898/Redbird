@@ -71,6 +71,7 @@ class InstallCommandTest extends TestCase
         $this->assertStringContainsString('redbird-seeders', $methodSource, 'Installation should publish redbird-seeders');
         $this->assertStringContainsString('redbird-views', $methodSource, 'Installation should publish redbird-views');
         $this->assertStringContainsString('redbird-components', $methodSource, 'Installation should publish redbird-components');
+        $this->assertStringContainsString('createRequiredModels', $methodSource, 'Installation should call createRequiredModels');
         $this->assertStringContainsString('migrate', $methodSource, 'Installation should run migrations');
         $this->assertStringContainsString('RolesAndPermissionsSeeder', $methodSource, 'Installation should run the seeder');
         $this->assertStringContainsString('installFilament', $methodSource, 'Installation should call installFilament');

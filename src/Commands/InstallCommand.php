@@ -62,6 +62,9 @@ class InstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
+        // Create required models (needed before migrations)
+        $this->createRequiredModels();
+
         // Run migrations
         if ($this->confirm('Would you like to run the migrations now?', true)) {
             $this->call('migrate');
@@ -77,9 +80,6 @@ class InstallCommand extends Command
             if ($this->confirm('Would you like to set up demo data (admin, tenant, and member users)?', true)) {
                 $this->setupDemoData();
             }
-
-            // Create required models
-            $this->createRequiredModels();
         }
 
         // Install Filament
