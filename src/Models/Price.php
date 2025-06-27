@@ -1,9 +1,7 @@
 <?php
 
-namespace Fullstack\Redbird\Models;
+namespace App\Models;
 
-use Fullstack\Redbird\Models\Product;
-use Cashier\Subscription;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

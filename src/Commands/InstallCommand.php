@@ -56,6 +56,12 @@ class InstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
+        // Publish view components
+        $this->call('vendor:publish', [
+            '--tag' => 'redbird-components',
+            '--force' => $this->option('force'),
+        ]);
+
         // Run migrations
         if ($this->confirm('Would you like to run the migrations now?', true)) {
             $this->call('migrate');

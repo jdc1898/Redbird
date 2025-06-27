@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Models;
+namespace App\Models;
 
-
+use App\Observers\PromoCodeObserver;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Checkbox;
@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
+#[ObservedBy([PromoCodeObserver::class])]
 class PromoCode extends Model
 {
     /** @use HasFactory<\Database\Factories\PromoCodeFactory> */
@@ -53,7 +53,7 @@ class PromoCode extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(config('auth.providers.users.model', \App\Models\User::class));
+        return $this->belongsTo(User::class);
     }
 
     public static function getForm(): array

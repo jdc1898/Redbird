@@ -1,12 +1,11 @@
 <?php
 
-namespace Fullstack\Redbird\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Cashier\Subscription;
 
 class Invoice extends Model
 {
@@ -31,7 +30,7 @@ class Invoice extends Model
 
     public function user()
     {
-        return $this->belongsTo(config('auth.providers.users.model', \App\Models\User::class));
+        return $this->belongsTo(User::class);
     }
 
     public function subscription()

@@ -229,6 +229,9 @@ php artisan vendor:publish --tag=filament-assets
 # Publish Filament resources for customization
 php artisan vendor:publish --tag=redbird-filament
 
+# Publish view components for customization
+php artisan vendor:publish --tag=redbird-components
+
 # Force overwrite existing files
 php artisan redbird:install --force
 ```

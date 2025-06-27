@@ -1,6 +1,6 @@
 <?php
 
-namespace Fullstack\Redbird\Models;
+namespace App\Models;
 
 use App\Observers\DiscountObserver;
 use Filament\Forms\Components\Actions;
@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
+#[ObservedBy([DiscountObserver::class])]
 class Discount extends Model
 {
     /** @use HasFactory<\Database\Factories\DiscountFactory> */
@@ -58,6 +58,10 @@ class Discount extends Model
         'deleted_at' => 'datetime',
     ];
 
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
+    }
 
     public function promoCodes(): HasMany
     {

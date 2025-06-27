@@ -70,6 +70,7 @@ class InstallCommandTest extends TestCase
         $this->assertStringContainsString('redbird-migrations', $methodSource, 'Installation should publish redbird-migrations');
         $this->assertStringContainsString('redbird-seeders', $methodSource, 'Installation should publish redbird-seeders');
         $this->assertStringContainsString('redbird-views', $methodSource, 'Installation should publish redbird-views');
+        $this->assertStringContainsString('redbird-components', $methodSource, 'Installation should publish redbird-components');
         $this->assertStringContainsString('migrate', $methodSource, 'Installation should run migrations');
         $this->assertStringContainsString('RolesAndPermissionsSeeder', $methodSource, 'Installation should run the seeder');
         $this->assertStringContainsString('installFilament', $methodSource, 'Installation should call installFilament');
@@ -197,5 +198,42 @@ class InstallCommandTest extends TestCase
 
         $method = $reflection->getMethod('createRequiredModels');
         $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'createRequiredModels should be private');
+    }
+
+    public function test_view_components_exist_in_package()
+    {
+        $componentsPath = __DIR__ . '/../src/Resources/views/components';
+
+        $this->assertTrue(is_dir($componentsPath), 'View components directory should exist');
+
+        // Check for specific component files
+        $expectedComponents = [
+            'select-card.blade.php',
+            'tiered-pricing.blade.php',
+            'pricing-description.blade.php',
+            'radio-card.blade.php',
+        ];
+
+        foreach ($expectedComponents as $component) {
+            $componentPath = $componentsPath . '/' . $component;
+            $this->assertTrue(file_exists($componentPath), "Component {$component} should exist");
+        }
+
+        // Check for filament subdirectory
+        $filamentComponentsPath = $componentsPath . '/filament';
+        $this->assertTrue(is_dir($filamentComponentsPath), 'Filament components subdirectory should exist');
+
+        // Check for specific Filament component files
+        $expectedFilamentComponents = [
+            'price-description.blade.php',
+            'radio-card.blade.php',
+            'badge-description.blade.php',
+            'hr.blade.php',
+        ];
+
+        foreach ($expectedFilamentComponents as $component) {
+            $componentPath = $filamentComponentsPath . '/' . $component;
+            $this->assertTrue(file_exists($componentPath), "Filament component {$component} should exist");
+        }
     }
 }
