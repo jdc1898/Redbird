@@ -1,0 +1,80 @@
+name: Release Package
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, phar, tokenizer, xml, xmlwriter, zip
+          coverage: none
+
+      - name: Install Composer
+        uses: ramsey/composer-install@v4
+        with:
+          composer-options: --no-dev --optimize-autoloader
+
+      - name: Get release version
+        id: get_version
+        run: |
+          # Extract version from release tag (remove 'v' prefix if present)
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Update composer.json version
+        run: |
+          # Update version in composer.json
+          composer config version ${{ steps.get_version.outputs.version }}
+          echo "Updated composer.json version to ${{ steps.get_version.outputs.version }}"
+
+      - name: Commit version update
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add composer.json
+          git commit -m "Bump version to ${{ steps.get_version.outputs.version }}"
+          git push
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.get_version.outputs.version }}
+          body: |
+            ## Release ${{ steps.get_version.outputs.version }}
+
+            ### What's Changed
+            - Automated release via GitHub Actions
+            - Version bumped to ${{ steps.get_version.outputs.version }}
+
+            ### Installation
+            ```bash
+            composer require fullstack/redbird:${{ steps.get_version.outputs.version }}
+            ```
+          draft: false
+          prerelease: false
+
+      - name: Publish to Packagist
+        if: github.event_name == 'release'
+        run: |
+          # This step would require Packagist webhook or API token
+          # For now, we'll just log that the release is ready
+          echo "Release ${{ steps.get_version.outputs.version }} is ready for Packagist"
+          echo "Make sure your Packagist webhook is configured to auto-update from GitHub releases"

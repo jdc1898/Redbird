@@ -11,6 +11,9 @@ class RedbirdServiceProvider extends ServiceProvider
     {
         // Merge package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/redbird.php', 'redbird');
+
+        // Merge custom guards into existing auth configuration
+        $this->mergeConfigFrom(__DIR__.'/../config/guards.php', 'auth');
     }
 
     public function boot(): void

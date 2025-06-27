@@ -131,6 +131,8 @@ php artisan vendor:publish --tag=redbird-views
 php artisan redbird:install --force
 ```
 
+**Note:** Custom authentication guards (`admin` and `tenant`) are automatically merged into your Laravel auth configuration during package registration.
+
 ### Customization
 
 #### Views
@@ -155,6 +157,48 @@ php artisan vendor:publish --tag=redbird-config
 
 - `php artisan redbird:install` - Install the package
 - `php artisan redbird:install --force` - Reinstall and overwrite existing files
+
+## Releasing
+
+### Automated Releases
+
+This package uses GitHub Actions for automated releases. When you create a GitHub release:
+
+1. **Create a new release** on GitHub with a tag (e.g., `v1.2.3`)
+2. **Publish the release** - this triggers the automated workflow
+3. The workflow will:
+   - Update `composer.json` version
+   - Create a GitHub release
+   - Push the updated version back to the repository
+
+### Manual Releases
+
+For manual releases, use the provided script:
+
+```bash
+# Bump patch version (1.0.0 → 1.0.1)
+./scripts/bump-version.sh patch
+
+# Bump minor version (1.0.0 → 1.1.0)
+./scripts/bump-version.sh minor
+
+# Bump major version (1.0.0 → 2.0.0)
+./scripts/bump-version.sh major
+```
+
+The script will:
+- Update the version in `composer.json`
+- Commit the change
+- Create and push a git tag
+- You can then create a GitHub release from the tag
+
+### Packagist Integration
+
+To automatically publish to Packagist:
+
+1. **Configure Packagist webhook** to watch your GitHub repository
+2. **Set up auto-update** in your Packagist package settings
+3. When you create a GitHub release, Packagist will automatically update
 
 ## Testing
 
