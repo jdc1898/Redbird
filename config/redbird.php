@@ -31,21 +31,24 @@ return [
     'panels' => [
         'admin' => [
             'path' => env('REDBIRD_ADMIN_PATH', 'admin'),
-            'domain' => env('REDBIRD_ADMIN_DOMAIN', null),
             'guard' => 'admin',
-            'color' => \Filament\Support\Colors\Color::Rose,
+            'colors' => [
+                'primary' => '#6366f1',
+            ],
         ],
         'tenant' => [
             'path' => env('REDBIRD_TENANT_PATH', 'tenant'),
-            'domain' => env('REDBIRD_TENANT_DOMAIN', null),
             'guard' => 'tenant',
-            'color' => \Filament\Support\Colors\Color::Amber,
+            'colors' => [
+                'primary' => '#d946ef',
+            ]
         ],
         'member' => [
             'path' => env('REDBIRD_MEMBER_PATH', 'member'),
-            'domain' => env('REDBIRD_MEMBER_DOMAIN', null),
             'guard' => 'web',
-            'color' => \Filament\Support\Colors\Color::Emerald,
+            'colors' => [
+                'primary' => '#10b981',
+            ]
         ],
     ],
 

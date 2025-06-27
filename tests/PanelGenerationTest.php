@@ -44,6 +44,28 @@ class PanelGenerationTest extends TestCase
       }
     }
 
+    public function test_panel_config_has_valid_colors()
+    {
+        // Load the actual config file
+        $config = include __DIR__ . '/../config/redbird.php';
+        $panelsConfig = $config['panels'];
+
+        // Test each panel has a colors configuration
+        foreach ($panelsConfig as $panelId => $panelConfig) {
+            $this->assertArrayHasKey('colors', $panelConfig, "Panel {$panelId} should have 'colors' key");
+
+            // Verify the colors is an array with primary key
+            $colorValue = $panelConfig['colors'];
+            $this->assertIsArray($colorValue, "Panel {$panelId} colors should be an array");
+            $this->assertArrayHasKey('primary', $colorValue, "Panel {$panelId} colors should have 'primary' key");
+
+            // Verify the primary color is a valid hex color
+            $primaryColor = $colorValue['primary'];
+            $this->assertIsString($primaryColor, "Panel {$panelId} primary color should be a string");
+            $this->assertMatchesRegularExpression('/^#[0-9a-fA-F]{6}$/', $primaryColor, "Panel {$panelId} primary color should be a valid hex color");
+        }
+    }
+
     public function test_stub_file_exists()
     {
       $stubPath = __DIR__ . '/../stubs/filament-panel-provider.stub';
@@ -55,6 +77,7 @@ class PanelGenerationTest extends TestCase
           $this->assertStringContainsString('{{ panel_id }}', $stubContent, 'Stub should contain panel_id placeholder');
           $this->assertStringContainsString('config(\'redbird.panels.{{ panel_id }}.path\')', $stubContent, 'Stub should contain config-based path');
           $this->assertStringContainsString('config(\'redbird.panels.{{ panel_id }}.guard\')', $stubContent, 'Stub should contain config-based guard');
+          $this->assertStringContainsString('config(\'redbird.panels.{{ panel_id }}.colors\')', $stubContent, 'Stub should contain config-based colors');
       }
     }
 }
