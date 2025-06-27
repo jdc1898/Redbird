@@ -43,5 +43,33 @@ class RedbirdServiceProvider extends ServiceProvider
 
         // Load package migrations
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        // Publish auth configuration for custom guards
+        $this->mergeAuthGuards();
+    }
+
+    protected function mergeAuthGuards(): void
+    {
+        $existingGuards = config('auth.guards', []);
+
+        $newGuards = [
+            'admin' => [
+                'driver' => 'session',
+                'provider' => 'users',
+            ],
+            'tenant' => [
+                'driver' => 'session',
+                'provider' => 'users',
+            ],
+        ];
+
+        // Only add guards that don't already exist
+        foreach ($newGuards as $key => $value) {
+            if (!array_key_exists($key, $existingGuards)) {
+                $existingGuards[$key] = $value;
+            }
+        }
+
+        config(['auth.guards' => $existingGuards]);
     }
 }
