@@ -96,6 +96,14 @@ class InstallCommand extends Command
         $this->call('config:clear');
         $this->call('cache:clear');
 
+        // Force composer to regenerate autoloader
+        $this->info('Regenerating autoloader...');
+        $this->call('composer', ['dump-autoload', '--no-interaction' => true]);
+
+        // Clear additional caches
+        $this->call('route:clear');
+        $this->call('view:clear');
+
         // Run migrations
         if ($this->confirm('Would you like to run the migrations now?', true)) {
             $this->call('migrate');
@@ -715,6 +723,17 @@ class InstallCommand extends Command
                 $this->line("  ✅ {$className} is available");
             } else {
                 $this->warn("  ⚠️  {$className} is NOT available");
+                // Try to manually include the file
+                $modelPath = app_path("Models/{$modelName}.php");
+                if (File::exists($modelPath)) {
+                    $this->line("  🔄 Manually including {$modelPath}");
+                    require_once $modelPath;
+                    if (class_exists($className)) {
+                        $this->line("  ✅ {$className} is now available after manual include");
+                    } else {
+                        $this->warn("  ❌ {$className} still not available after manual include");
+                    }
+                }
             }
         }
     }
