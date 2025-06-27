@@ -125,8 +125,73 @@ return [
     |
     */
     'roles' => [
-        'super-admin' => 'Super Administrator',
         'admin' => 'Administrator',
-        'user' => 'User',
+        'tenant' => 'Tenant Administrator',
+        'member' => 'Member',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Roles
+    |--------------------------------------------------------------------------
+    |
+    | Default roles to create during installation
+    |
+    */
+    'seed' => [
+        'member' => [
+            'name' => 'member',
+            'display_name' => 'Member',
+            'description' => 'A member of the application with basic access rights.',
+            'role_guard' => 'member',
+            'guards' => [
+                [
+                    'name' => 'member',
+                    'permissions' => [
+                        [
+                            'name' => 'access-member-panel',
+                            'display_name' => 'Access Member Panel',
+                            'description' => 'Allows the user to access the member panel.',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'tenant' => [
+            'name' => 'tenant-admin',
+            'display_name' => 'Tenant Admin',
+            'description' => 'An administrator with access to manage users, roles, and application settings.',
+            'role_guard' => 'tenant-',
+            'guards' => [
+                [
+                    'name' => 'tenant',
+                    'permissions' => [
+                        [
+                            'name' => 'tenant-panel',
+                            'display_name' => 'Access Tenant Admin Panel',
+                            'description' => 'Allows the user to access the tenant admin panel.',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'admin' => [
+            'name' => 'admin',
+            'display_name' =>  'Admin',
+            'description' => 'An administrator with full access to all application features and settings.',
+            'role_guard' => 'admin',
+            'guards' => [
+                [
+                    'name' => 'admin',
+                    'permissions' => [
+                        [
+                            'name' => 'admin-panel',
+                            'display_name' => 'Access Admin Panel',
+                            'description' => 'Allows the user to access the Admin panel.',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 ];

@@ -33,6 +33,11 @@ class RedbirdServiceProvider extends ServiceProvider
             __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'redbird-migrations');
 
+        // Publish seeders
+        $this->publishes([
+            __DIR__.'/../database/seeders' => database_path('seeders'),
+        ], 'redbird-seeders');
+
         // Publish assets
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/redbird'),

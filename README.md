@@ -51,6 +51,7 @@ php artisan redbird:install
 This command will:
 - Publish configuration files
 - Publish and run migrations
+- Seed roles and permissions from config
 - Generate Filament panel providers from config
 - Register panel providers in bootstrap/providers.php (Laravel 11+) or config/app.php
 - Publish Filament assets (CSS, JS) for proper styling
@@ -196,6 +197,9 @@ php artisan vendor:publish --tag=redbird-auth
 
 # Publish migrations only
 php artisan vendor:publish --tag=redbird-migrations
+
+# Publish seeders only
+php artisan vendor:publish --tag=redbird-seeders
 
 # Publish views only
 php artisan vendor:publish --tag=redbird-views
