@@ -3,9 +3,6 @@ name: Auto Release
 on:
   push:
     branches: [ main ]
-    paths-ignore:
-      - '**.md'
-      - '.github/workflows/auto-release.yml'
   pull_request:
     branches: [ main ]
 
