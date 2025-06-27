@@ -33,19 +33,19 @@ return [
             'path' => env('REDBIRD_ADMIN_PATH', 'admin'),
             'domain' => env('REDBIRD_ADMIN_DOMAIN', null),
             'guard' => 'admin',
-            'color' => 'Color::Rose',
+            'color' => \Filament\Support\Colors\Color::Rose,
         ],
         'tenant' => [
             'path' => env('REDBIRD_TENANT_PATH', 'tenant'),
             'domain' => env('REDBIRD_TENANT_DOMAIN', null),
             'guard' => 'tenant',
-            'color' => 'Color::Amber',
+            'color' => \Filament\Support\Colors\Color::Amber,
         ],
         'member' => [
             'path' => env('REDBIRD_MEMBER_PATH', 'member'),
             'domain' => env('REDBIRD_MEMBER_DOMAIN', null),
             'guard' => 'web',
-            'color' => 'Color::Emerald',
+            'color' => \Filament\Support\Colors\Color::Emerald,
         ],
     ],
 
