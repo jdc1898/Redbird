@@ -38,7 +38,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ],
                 [
                     'guard_name' => $roleData['role_guard'] ?? 'web',
-                    'display_name' => $roleData['name'],
+                    'display_name' => $roleData['display_name'] ?? $roleData['name'] ?? $roleName,
                     'description' => $roleData['description'] ?? null,
                 ]
             );
@@ -52,8 +52,8 @@ class RolesAndPermissionsSeeder extends Seeder
                     ],
                         [
                             'guard_name' => $guard['name'],
-                            'description' => $permissionData['description'],
-                            'display_name' => $permissionData['display_name'] ?? null,
+                            'display_name' => $permissionData['display_name'] ?? $permissionData['name'],
+                            'description' => $permissionData['description'] ?? null,
                         ]
                     );
                 }

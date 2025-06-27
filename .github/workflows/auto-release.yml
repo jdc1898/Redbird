@@ -15,8 +15,8 @@ jobs:
 
     strategy:
       matrix:
-        php: [8.2, 8.3]
-        laravel: [10.*, 11.*]
+        php: [8.3]
+        laravel: [11.*]
 
     steps:
       - name: Checkout code
