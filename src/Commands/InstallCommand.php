@@ -21,6 +21,12 @@ class InstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
+        // Publish auth guards configuration
+        $this->call('vendor:publish', [
+            '--tag' => 'redbird-auth',
+            '--force' => $this->option('force'),
+        ]);
+
         // Publish Laravel Cashier migrations first (required for subscriptions)
         $this->call('vendor:publish', [
             '--tag' => 'cashier-migrations',
