@@ -2,17 +2,20 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Forms\Builders\ProductFormBuilder;
 use App\Filament\Admin\Resources\ProductResource\Pages;
 use App\Filament\Admin\Resources\ProductResource\RelationManagers\PriceRelationManager;
+
 use App\Filament\Admin\Widgets\ProductStatsWidget;
-    
 use App\Http\Controllers\Product\ProductController;
-use App\Jobs\SyncProductWithStripe;
 // use Filament\Infolists\Components\Actions;
 // use Filament\Infolists\Components\Actions\Action;
+use App\Jobs\SyncProductWithStripe;
 use App\Models\Product;
 use App\Services\Redbird\Redbird;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Infolists\Components\KeyValueEntry;
@@ -31,8 +34,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 
 class ProductResource extends Resource
 {
