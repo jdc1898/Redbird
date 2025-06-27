@@ -344,3 +344,7 @@ Built with ❤️ using:
 - [Laravel Cashier](https://laravel.com/docs/billing)
 
 ## TODO
+
+- [ ] Add more comprehensive test coverage
+- [ ] Implement advanced billing features
+- [ ] Add API documentation
