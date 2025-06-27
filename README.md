@@ -226,9 +226,14 @@ php artisan vendor:publish --tag=redbird-views
 # Publish Filament assets (CSS, JS)
 php artisan vendor:publish --tag=filament-assets
 
+# Publish Filament resources for customization
+php artisan vendor:publish --tag=redbird-filament
+
 # Force overwrite existing files
 php artisan redbird:install --force
 ```
+
+**Note:** The installation command will offer to publish Filament resources automatically. These resources include all the admin panel components and can be customized after publishing.
 
 ## Commands
 

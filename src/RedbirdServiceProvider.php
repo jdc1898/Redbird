@@ -43,6 +43,13 @@ class RedbirdServiceProvider extends ServiceProvider
             __DIR__.'/../resources/views' => resource_path('views/vendor/redbird'),
         ], 'redbird-views');
 
+        // Publish Filament resources
+        $this->publishes([
+            __DIR__.'/Filament/Admin' => app_path('Filament/Admin'),
+            __DIR__.'/Filament/Tenant' => app_path('Filament/Tenant'),
+            __DIR__.'/Filament/Member' => app_path('Filament/Member'),
+        ], 'redbird-filament');
+
         // Load package views
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'redbird');
 

@@ -151,4 +151,34 @@ class InstallCommandTest extends TestCase
         $method = $reflection->getMethod('checkExistingApplication');
         $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'checkExistingApplication should be private');
     }
+
+    public function test_publish_filament_resources_method_exists()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+
+        $this->assertTrue($reflection->hasMethod('publishFilamentResources'), 'InstallCommand should have publishFilamentResources method');
+
+        $method = $reflection->getMethod('publishFilamentResources');
+        $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'publishFilamentResources should be private');
+    }
+
+    public function test_filament_resources_exist_in_package()
+    {
+        $adminPath = __DIR__ . '/../src/Filament/Admin';
+        $tenantPath = __DIR__ . '/../src/Filament/Tenant';
+        $memberPath = __DIR__ . '/../src/Filament/Member';
+
+        $this->assertTrue(is_dir($adminPath), 'Admin Filament resources should exist');
+        $this->assertTrue(is_dir($tenantPath), 'Tenant Filament resources should exist');
+        $this->assertTrue(is_dir($memberPath), 'Member Filament resources should exist');
+
+        // Check that Admin has resources
+        $adminResourcesPath = $adminPath . '/Resources';
+        $this->assertTrue(is_dir($adminResourcesPath), 'Admin Resources directory should exist');
+
+        // Check that Tenant has resources
+        $tenantResourcesPath = $tenantPath . '/Resources';
+        $this->assertTrue(is_dir($tenantResourcesPath), 'Tenant Resources directory should exist');
+    }
 }

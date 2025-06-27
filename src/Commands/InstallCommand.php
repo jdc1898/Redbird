@@ -20,6 +20,9 @@ class InstallCommand extends Command
         // Check if this is an existing application
         $this->checkExistingApplication();
 
+        // Check if User model uses HasRoles trait
+        $this->checkUserModelHasRolesTrait();
+
         // Publish configuration
         $this->call('vendor:publish', [
             '--tag' => 'redbird-config',
@@ -73,6 +76,9 @@ class InstallCommand extends Command
         // Install Filament
         if ($this->confirm('Would you like to install Filament admin panel?', true)) {
             $this->installFilament();
+
+            // Publish Filament resources
+            $this->publishFilamentResources();
         }
 
         // Install Laravel Cashier
@@ -490,6 +496,48 @@ class InstallCommand extends Command
             $this->line('');
         } else {
             $this->info('✅ No conflicts detected.');
+        }
+    }
+
+    private function publishFilamentResources(): void
+    {
+        $this->info('Publishing Filament resources...');
+
+        // Use vendor publish for consistency
+        $this->call('vendor:publish', [
+            '--tag' => 'redbird-filament',
+            '--force' => $this->option('force'),
+        ]);
+
+        $this->info('✅ Filament resources published successfully!');
+        $this->line('');
+        $this->line('Resources published to:');
+        $this->line('  • app/Filament/Admin/');
+        $this->line('  • app/Filament/Tenant/');
+        $this->line('  • app/Filament/Member/');
+        $this->line('');
+        $this->line('You can now customize these resources as needed.');
+    }
+
+    private function checkUserModelHasRolesTrait(): void
+    {
+        $this->info('Checking if User model uses HasRoles trait...');
+
+        $userModel = config('auth.providers.users.model', 'App\\Models\\User');
+        if (class_exists($userModel)) {
+            $traits = class_uses_recursive($userModel);
+            if (in_array('Spatie\\Permission\\Traits\\HasRoles', $traits)) {
+                $this->info('✅ User model uses HasRoles trait');
+            } else {
+                $this->warn('⚠️  User model does not use HasRoles trait');
+                $this->line('Please add the HasRoles trait to your User model to use Spatie Permissions');
+                if (! $this->confirm('Continue anyway?', false)) {
+                    $this->info('Installation cancelled.');
+                    exit(0);
+                }
+            }
+        } else {
+            $this->warn('⚠️  User model does not exist');
         }
     }
 }
