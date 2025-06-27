@@ -6,10 +6,66 @@ on:
     paths-ignore:
       - '**.md'
       - '.github/workflows/auto-release.yml'
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: write
 
 jobs:
-  auto-release:
+  test:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [8.2, 8.3]
+        laravel: [10.*, 11.*]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, phar, tokenizer, xml, xmlwriter, zip
+          coverage: none
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: --prefer-dist --optimize-autoloader
+
+      - name: Run tests
+        run: vendor/bin/phpunit
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, phar, tokenizer, xml, xmlwriter, zip
+          coverage: none
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: --prefer-dist --optimize-autoloader
+
+      - name: Run security check
+        run: composer audit --format=json --no-interaction
+
+  release:
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -53,21 +109,10 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New version: $NEW_VERSION"
 
-      - name: Update composer.json version
-        run: |
-          composer config version ${{ steps.new_version.outputs.new_version }}
-          echo "Updated composer.json version to ${{ steps.new_version.outputs.new_version }}"
-
       - name: Configure Git
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-
-      - name: Commit and push version update
-        run: |
-          git add composer.json
-          git commit -m "Auto-bump version to ${{ steps.new_version.outputs.new_version }}"
-          git push
 
       - name: Create and push tag
         run: |
@@ -86,7 +131,7 @@ jobs:
 
             ### What's Changed
             - Automated release via GitHub Actions
-            - Version bumped to ${{ steps.new_version.outputs.new_version }}
+            - Version calculated: ${{ steps.new_version.outputs.new_version }}
 
             ### Installation
             ```bash

@@ -162,25 +162,26 @@ php artisan vendor:publish --tag=redbird-config
 
 ### 🚀 Fully Automated Releases
 
-This package uses **fully automated releases**! Simply push to main and everything happens automatically:
+This package uses **fully automated releases**! Simply bump the version and push to main:
 
 ```bash
-# Just commit and push - that's it!
-git add .
-git commit -m "Add new features"
+# Option 1: Manual version bump + auto-release
+./scripts/bump-composer-version.sh patch
 git push origin main
+
+# Option 2: Quick release (auto-bumps patch version)
+./scripts/release.sh
 ```
 
 **What happens automatically:**
 1. ✅ **Tests run** - CI ensures everything works
-2. ✅ **Version bumped** - Patch version auto-incremented
-3. ✅ **Git tag created** - Semantic versioning tag
-4. ✅ **GitHub release** - Professional release notes
-5. ✅ **Packagist updated** - Package available immediately
+2. ✅ **Tag created** - Semantic versioning tag (v0.2.1)
+3. ✅ **GitHub release** - Professional release notes
+4. ✅ **Packagist updated** - Package available immediately
 
 ### Quick Release Script
 
-For even easier releases, use the provided script:
+For the easiest releases:
 
 ```bash
 # Auto-release with default message
@@ -190,15 +191,18 @@ For even easier releases, use the provided script:
 ./scripts/release.sh "Add authentication improvements"
 ```
 
-### Manual Version Control (Optional)
+### Manual Version Control
 
-If you need manual control over version bumping:
+For manual control over version bumping:
 
 ```bash
-# Manual version bump (creates tag immediately)
-./scripts/bump-version.sh patch   # 1.0.0 → 1.0.1
-./scripts/bump-version.sh minor   # 1.0.0 → 1.1.0
-./scripts/bump-version.sh major   # 1.0.0 → 2.0.0
+# Bump composer.json version locally
+./scripts/bump-composer-version.sh patch   # 1.0.0 → 1.0.1
+./scripts/bump-composer-version.sh minor   # 1.0.0 → 1.1.0
+./scripts/bump-composer-version.sh major   # 1.0.0 → 2.0.0
+
+# Then push to trigger auto-release
+git push origin main
 ```
 
 ### Packagist Integration
@@ -207,13 +211,13 @@ To automatically publish to Packagist:
 
 1. **Configure Packagist webhook** to watch your GitHub repository
 2. **Set up auto-update** in your Packagist package settings
-3. **That's it!** - Every push to main will update Packagist automatically
+3. **That's it!** - Every release will update Packagist automatically
 
 ### Workflow Details
 
 - **Trigger**: Push to `main` branch
 - **Exclusions**: Markdown files and workflow files don't trigger releases
-- **Versioning**: Auto-increments patch version (1.0.0 → 1.0.1)
+- **Versioning**: Uses composer.json version for releases
 - **Testing**: Runs full test suite before release
 - **Security**: Performs security audits
 - **Tags**: Creates semantic version tags (v1.0.1)
