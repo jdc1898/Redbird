@@ -587,7 +587,7 @@ class InstallCommand extends Command
     {
         $this->info('Copying required models from src/Models to app/Models...');
 
-        $srcModelsPath = base_path('src/Models');
+        $srcModelsPath = __DIR__ . '/../Models';
         $appModelsPath = app_path('Models');
         $createdCount = 0;
         $skippedCount = 0;
