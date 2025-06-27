@@ -4,8 +4,8 @@ namespace Fullstack\Redbird\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Fullstack\Redbird\Models\User;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Schema;
 
 class InstallCommand extends Command
 {
@@ -16,6 +16,9 @@ class InstallCommand extends Command
     public function handle(): int
     {
         $this->info('Installing Redbird SaaS Package...');
+
+        // Check if this is an existing application
+        $this->checkExistingApplication();
 
         // Publish configuration
         $this->call('vendor:publish', [
@@ -345,24 +348,36 @@ class InstallCommand extends Command
         $adminUser = $this->createOrGetUser('admin@example.com', 'Admin User');
         $adminRole = Role::where('name', 'admin')->first();
         if ($adminRole) {
-            $adminUser->assignRole($adminRole);
-            $this->info('✅ Created admin user: admin@example.com (password: password)');
+            if (!$adminUser->hasRole($adminRole)) {
+                $adminUser->assignRole($adminRole);
+                $this->info('✅ Assigned admin role to admin@example.com');
+            } else {
+                $this->info('ℹ️  admin@example.com already has admin role');
+            }
         }
 
         // Create Tenant Admin User
         $tenantUser = $this->createOrGetUser('tenant@example.com', 'Tenant Admin');
         $tenantRole = Role::where('name', 'tenant')->first();
         if ($tenantRole) {
-            $tenantUser->assignRole($tenantRole);
-            $this->info('✅ Created tenant admin user: tenant@example.com (password: password)');
+            if (!$tenantUser->hasRole($tenantRole)) {
+                $tenantUser->assignRole($tenantRole);
+                $this->info('✅ Assigned tenant role to tenant@example.com');
+            } else {
+                $this->info('ℹ️  tenant@example.com already has tenant role');
+            }
         }
 
         // Create Member User
         $memberUser = $this->createOrGetUser('member@example.com', 'Member User');
         $memberRole = Role::where('name', 'member')->first();
         if ($memberRole) {
-            $memberUser->assignRole($memberRole);
-            $this->info('✅ Created member user: member@example.com (password: password)');
+            if (!$memberUser->hasRole($memberRole)) {
+                $memberUser->assignRole($memberRole);
+                $this->info('✅ Assigned member role to member@example.com');
+            } else {
+                $this->info('ℹ️  member@example.com already has member role');
+            }
         }
 
         $this->line('');
@@ -375,19 +390,94 @@ class InstallCommand extends Command
         $this->line('');
     }
 
-    private function createOrGetUser(string $email, string $name): User
+    private function createOrGetUser(string $email, string $name)
     {
-        $user = User::where('email', $email)->first();
+        $userClass = config('auth.providers.users.model', 'App\\Models\\User');
+        $user = $userClass::where('email', $email)->first();
 
         if (!$user) {
-            $user = User::create([
+            $user = $userClass::create([
                 'name' => $name,
                 'email' => $email,
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
             ]);
+            $this->info("✅ Created new user: {$email}");
+        } else {
+            $this->info("ℹ️  User already exists: {$email}");
         }
 
         return $user;
+    }
+
+    private function checkExistingApplication(): void
+    {
+        $this->info('Checking for potential conflicts in existing application...');
+
+        $warnings = [];
+
+        // Check if User model already exists
+        $userModel = config('auth.providers.users.model', 'App\\Models\\User');
+        if (class_exists($userModel)) {
+            $warnings[] = "User model already exists in {$userModel} - the package will use this model";
+        }
+
+        // Check if Filament is already installed
+        if (class_exists('Filament\\FilamentServiceProvider')) {
+            $warnings[] = 'Filament appears to be already installed - this may cause conflicts';
+        }
+
+        // Check if Spatie Permissions is already installed
+        if (class_exists('Spatie\\Permission\\PermissionServiceProvider')) {
+            $warnings[] = 'Spatie Permissions package appears to be already installed';
+        }
+
+        // Check if Laravel Cashier is already installed
+        if (class_exists('Laravel\\Cashier\\CashierServiceProvider')) {
+            $warnings[] = 'Laravel Cashier appears to be already installed';
+        }
+
+        // Check for existing tables that might conflict
+        $conflictingTables = ['products', 'prices', 'invoices', 'discounts', 'promo_codes'];
+        foreach ($conflictingTables as $table) {
+            if (Schema::hasTable($table)) {
+                $warnings[] = "Table '{$table}' already exists - migration may fail";
+            }
+        }
+
+        // Check for existing roles
+        if (class_exists('Spatie\\Permission\\Models\\Role')) {
+            $existingRoles = \Spatie\Permission\Models\Role::whereIn('name', ['admin', 'tenant', 'member'])->get();
+            if ($existingRoles->isNotEmpty()) {
+                $roleNames = $existingRoles->pluck('name')->implode(', ');
+                $warnings[] = "Roles already exist: {$roleNames} - they may be overwritten";
+            }
+
+            // Check if any users already have these roles
+            $userModel = config('auth.providers.users.model', 'App\\Models\\User');
+            if (class_exists($userModel) && method_exists($userModel, 'role')) {
+                $usersWithRoles = $userModel::role(['admin', 'tenant', 'member'])->get();
+                if ($usersWithRoles->isNotEmpty()) {
+                    $userEmails = $usersWithRoles->pluck('email')->implode(', ');
+                    $warnings[] = "Users already have these roles: {$userEmails}";
+                }
+            }
+        }
+
+        if (!empty($warnings)) {
+            $this->warn('⚠️  Potential conflicts detected in existing application:');
+            foreach ($warnings as $warning) {
+                $this->line("  • {$warning}");
+            }
+            $this->line('');
+
+            if (!$this->confirm('Do you want to continue with the installation?', false)) {
+                $this->info('Installation cancelled.');
+                exit(0);
+            }
+            $this->line('');
+        } else {
+            $this->info('✅ No conflicts detected.');
+        }
     }
 }

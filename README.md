@@ -34,6 +34,28 @@ A comprehensive Laravel SaaS package with Filament admin panel, user management,
 - Laravel 10.0 or higher
 - MySQL/PostgreSQL database
 
+## User Model Requirements
+
+The package uses your application's default User model (configured in `config/auth.php`). Your User model must include the Spatie Permission traits to enable role management:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
+
+class User extends Authenticatable
+{
+    use HasRoles;
+
+    // ... your existing code
+}
+```
+
+If you don't have the Spatie Permission package installed, the installation command will install it for you.
+
 ## Installation
 
 ### 1. Install the Package
@@ -192,9 +214,6 @@ You can publish specific assets using tags:
 # Publish configuration only
 php artisan vendor:publish --tag=redbird-config
 
-# Publish auth configuration (custom guards)
-php artisan vendor:publish --tag=redbird-auth
-
 # Publish migrations only
 php artisan vendor:publish --tag=redbird-migrations
 
@@ -211,97 +230,10 @@ php artisan vendor:publish --tag=filament-assets
 php artisan redbird:install --force
 ```
 
-**Note:** Custom authentication guards (`admin` and `tenant`) are automatically merged into your Laravel auth configuration during package registration.
-
-### Customization
-
-#### Views
-
-Publish the views to customize the UI:
-
-```bash
-php artisan vendor:publish --tag=redbird-views
-```
-
-Views will be published to `resources/views/vendor/redbird/`.
-
-#### Configuration
-
-Publish the config file to customize package behavior:
-
-```bash
-php artisan vendor:publish --tag=redbird-config
-```
-
 ## Commands
 
 - `php artisan redbird:install` - Install the package
 - `php artisan redbird:install --force` - Reinstall and overwrite existing files
-
-## Releasing
-
-### 🚀 Fully Automated Releases
-
-This package uses **fully automated releases**! Simply bump the version and push to main:
-
-```bash
-# Option 1: Manual version bump + auto-release
-./scripts/bump-composer-version.sh patch
-git push origin main
-
-# Option 2: Quick release (auto-bumps patch version)
-./scripts/release.sh
-```
-
-**What happens automatically:**
-1. ✅ **Tests run** - CI ensures everything works
-2. ✅ **Tag created** - Semantic versioning tag (v0.2.1)
-3. ✅ **GitHub release** - Professional release notes
-4. ✅ **Packagist updated** - Package available immediately
-
-### Quick Release Script
-
-For the easiest releases:
-
-```bash
-# Auto-release with default message
-./scripts/release.sh
-
-# Auto-release with custom message
-./scripts/release.sh "Add authentication improvements"
-```
-
-### Manual Version Control
-
-For manual control over version bumping:
-
-```bash
-# Bump composer.json version locally
-./scripts/bump-composer-version.sh patch   # 1.0.0 → 1.0.1
-./scripts/bump-composer-version.sh minor   # 1.0.0 → 1.1.0
-./scripts/bump-composer-version.sh major   # 1.0.0 → 2.0.0
-
-# Then push to trigger auto-release
-git push origin main
-```
-
-### Packagist Integration
-
-To automatically publish to Packagist:
-
-1. **Configure Packagist webhook** to watch your GitHub repository
-2. **Set up auto-update** in your Packagist package settings
-3. **That's it!** - Every release will update Packagist automatically
-
-### Workflow Details
-
-- **Trigger**: Push to `main` branch
-- **Exclusions**: Markdown files and workflow files don't trigger releases
-- **Versioning**: Uses composer.json version for releases
-- **Testing**: Runs full test suite before release
-- **Security**: Performs security audits
-- **Tags**: Creates semantic version tags (v1.0.1)
-- **Releases**: Generates GitHub releases with changelog
 
 ## Testing
 
@@ -313,64 +245,23 @@ vendor/bin/phpunit
 
 ### Common Issues
 
-**Packagist Version Mismatch**
-If you see "tag does not match version in composer.json" errors:
-1. Ensure composer.json version matches your latest tag
-2. Run `./scripts/release.sh` to trigger a proper release
-3. Check that the auto-release workflow completed successfully
+**User Model Missing HasRoles Trait**
+If you get "Call to undefined method assignRole()" errors:
+1. Ensure your User model includes `use Spatie\Permission\Traits\HasRoles;`
+2. Run `php artisan redbird:install` again to set up roles
 
-**Git Identity Errors in CI/CD**
-If GitHub Actions fails with "Author identity unknown":
-1. The workflow now configures Git identity automatically
-2. Ensure you're using the latest workflow version
-3. Check that the workflow has proper permissions
+**Existing Application Conflicts**
+The installation command will detect potential conflicts in existing applications:
+- Existing User models
+- Already installed packages (Filament, Spatie Permissions, Cashier)
+- Conflicting database tables
+- Existing roles and permissions
 
 **Filament Panel Not Loading**
 1. Ensure you've run `php artisan redbird:install`
 2. Check that panel providers are registered in your app
 3. Verify your `.env` configuration matches the panel settings
 
-### Support
-
-- 📧 **Email**: hello@fullstack.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/jdc1898/Redbird/issues)
-- 📖 **Documentation**: [Full Documentation](https://github.com/jdc1898/Redbird/wiki)
-
-## Roadmap
-
-- [ ] **Advanced Analytics** - More detailed SaaS metrics and reporting
-- [ ] **Multi-Currency Support** - International payment processing
-- [ ] **Advanced Billing** - Usage-based billing and metering
-- [ ] **API Documentation** - OpenAPI/Swagger documentation
-- [ ] **Mobile App Support** - React Native integration
-- [ ] **White-label Options** - Custom branding and theming
-
-## Contributing
-
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-## Security
-
-If you discover any security related issues, please email security@fullstack.com instead of using the issue tracker.
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Credits
-
-- [Fullstack LLC](https://github.com/fullstack-llc)
-- [All Contributors](../../contributors)
-
-Built with ❤️ using:
-- [Laravel](https://laravel.com)
-- [Filament](https://filamentphp.com)
-- [Spatie Laravel Permission](https://spatie.be/docs/laravel-permission)
-- [Laravel Cashier](https://laravel.com/docs/billing)
-
-## TODO
-
-- [ ] Add more comprehensive test coverage
-- [ ] Implement advanced billing features
-- [ ] Add API documentation
-- [ ]
