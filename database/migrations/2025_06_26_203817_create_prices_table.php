@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +17,7 @@ return new class extends Migration
             $table->string('currency')->default('usd');
             $table->json('metadata')->nullable();
             $table->string('nickname')->nullable();
-            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor('App\Models\Product')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->json('recurring')->nullable();
             $table->enum('tax_behavior', ['inclusive', 'exclusive', 'unspecified'])->nullable();
             $table->enum('type', ['one_time', 'recurring'])->nullable();

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Discount;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->string('promo_id')->nullable()->unique();
             $table->boolean('active')->default(true);
             $table->string('code');
-            $table->foreignIdFor(Discount::class)
+            $table->foreignIdFor('App\Models\Discount')
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();

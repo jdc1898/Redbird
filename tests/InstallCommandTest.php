@@ -71,7 +71,9 @@ class InstallCommandTest extends TestCase
         $this->assertStringContainsString('redbird-seeders', $methodSource, 'Installation should publish redbird-seeders');
         $this->assertStringContainsString('redbird-views', $methodSource, 'Installation should publish redbird-views');
         $this->assertStringContainsString('redbird-components', $methodSource, 'Installation should publish redbird-components');
+        $this->assertStringContainsString('redbird-attributes', $methodSource, 'Installation should publish redbird-attributes');
         $this->assertStringContainsString('createRequiredModels', $methodSource, 'Installation should call createRequiredModels');
+        $this->assertStringContainsString('copyAttributes', $methodSource, 'Installation should call copyAttributes');
         $this->assertStringContainsString('migrate', $methodSource, 'Installation should run migrations');
         $this->assertStringContainsString('RolesAndPermissionsSeeder', $methodSource, 'Installation should run the seeder');
         $this->assertStringContainsString('installFilament', $methodSource, 'Installation should call installFilament');
@@ -259,6 +261,28 @@ class InstallCommandTest extends TestCase
         }
     }
 
+    public function test_attributes_exist_in_package()
+    {
+        $attributesPath = __DIR__ . '/../src/Attributes';
+
+        $this->assertTrue(is_dir($attributesPath), 'Attributes directory should exist');
+
+        // Check for specific attribute files
+        $expectedAttributes = [
+            'Context.php',
+        ];
+
+        foreach ($expectedAttributes as $attribute) {
+            $attributePath = $attributesPath . '/' . $attribute;
+            $this->assertTrue(file_exists($attributePath), "Attribute {$attribute} should exist");
+        }
+
+        // Check that Context attribute has correct namespace
+        $contextPath = $attributesPath . '/Context.php';
+        $contextContent = file_get_contents($contextPath);
+        $this->assertStringContainsString('namespace Fullstack\\Redbird\\Attributes;', $contextContent, 'Context attribute should have correct package namespace');
+    }
+
     public function test_install_cashier_method_includes_installation_check()
     {
         $command = new InstallCommand();
@@ -278,5 +302,37 @@ class InstallCommandTest extends TestCase
         // Verify that the method includes Cashier installation check
         $this->assertStringContainsString('class_exists', $methodSource, 'installCashier should check if Cashier is already installed');
         $this->assertStringContainsString('CashierServiceProvider', $methodSource, 'installCashier should check for CashierServiceProvider');
+    }
+
+    public function test_copy_attributes_method_exists()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+
+        $this->assertTrue($reflection->hasMethod('copyAttributes'), 'InstallCommand should have copyAttributes method');
+
+        $method = $reflection->getMethod('copyAttributes');
+        $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'copyAttributes should be private');
+    }
+
+    public function test_copy_attributes_includes_class_existence_check()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+        $method = $reflection->getMethod('copyAttributes');
+        $method->setAccessible(true);
+
+        // Get the method source code to verify it includes class existence check
+        $filename = $reflection->getFileName();
+        $startLine = $method->getStartLine();
+        $endLine = $method->getEndLine();
+
+        $source = file_get_contents($filename);
+        $lines = explode("\n", $source);
+        $methodSource = implode("\n", array_slice($lines, $startLine - 1, $endLine - $startLine + 1));
+
+        // Verify that the method includes class existence check
+        $this->assertStringContainsString('class_exists', $methodSource, 'copyAttributes should check if attribute class already exists');
+        $this->assertStringContainsString('App\\\\Attributes', $methodSource, 'copyAttributes should check for App\\Attributes namespace');
     }
 }

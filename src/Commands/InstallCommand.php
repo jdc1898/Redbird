@@ -80,8 +80,21 @@ class InstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
+        // Publish attributes
+        $this->call('vendor:publish', [
+            '--tag' => 'redbird-attributes',
+            '--force' => $this->option('force'),
+        ]);
+
         // Create required models (needed before migrations)
         $this->createRequiredModels();
+
+        // Copy attributes with correct namespace
+        $this->copyAttributes();
+
+        // Clear autoloader cache to ensure models are properly loaded
+        $this->call('config:clear');
+        $this->call('cache:clear');
 
         // Run migrations
         if ($this->confirm('Would you like to run the migrations now?', true)) {
@@ -684,5 +697,54 @@ class InstallCommand extends Command
         }
 
         $this->info("✅ Models copied: {$createdCount}, skipped: {$skippedCount}");
+    }
+
+    private function copyAttributes(): void
+    {
+        $this->info('Copying attributes with correct namespace...');
+
+        $srcAttributesPath = __DIR__ . '/../Attributes';
+        $appAttributesPath = app_path('Attributes');
+        $createdCount = 0;
+        $skippedCount = 0;
+
+        if (!File::exists($srcAttributesPath)) {
+            $this->warn('No attributes found in src/Attributes.');
+            return;
+        }
+
+        $attributeFiles = File::files($srcAttributesPath);
+        foreach ($attributeFiles as $file) {
+            $attributeName = $file->getFilename();
+            $targetPath = $appAttributesPath . '/' . $attributeName;
+            $className = 'App\\Attributes\\' . pathinfo($attributeName, PATHINFO_FILENAME);
+
+            // Check if the attribute class already exists
+            if (class_exists($className)) {
+                $this->line("  ℹ️  Attribute class {$className} already exists, skipping...");
+                $skippedCount++;
+                continue;
+            }
+
+            // Also check if the file exists (for cases where class might not be autoloaded yet)
+            if (File::exists($targetPath)) {
+                $this->line("  ℹ️  Attribute file {$attributeName} already exists, skipping...");
+                $skippedCount++;
+                continue;
+            }
+
+            // Read and update namespace
+            $content = File::get($file->getPathname());
+            $content = preg_replace('/namespace\\s+[^;]+;/', 'namespace App\\Attributes;', $content);
+            // Create Attributes directory if it doesn't exist
+            if (!File::exists($appAttributesPath)) {
+                File::makeDirectory($appAttributesPath, 0755, true);
+            }
+            File::put($targetPath, $content);
+            $this->info("  ✅ Copied attribute: {$attributeName}");
+            $createdCount++;
+        }
+
+        $this->info("✅ Attributes copied: {$createdCount}, skipped: {$skippedCount}");
     }
 }
