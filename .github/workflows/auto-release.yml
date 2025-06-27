@@ -74,6 +74,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -144,11 +149,6 @@ jobs:
           git add composer.json
           git commit -m "Bump version to ${{ steps.new_version.outputs.new_version }}"
           git push
-
-      - name: Configure Git
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
 
       - name: Check if tag exists
         id: tag_check
