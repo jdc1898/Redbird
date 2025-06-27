@@ -237,4 +237,25 @@ class InstallCommandTest extends TestCase
             $this->assertTrue(file_exists($componentPath), "Filament component {$component} should exist");
         }
     }
+
+    public function test_install_cashier_method_includes_installation_check()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+        $method = $reflection->getMethod('installCashier');
+        $method->setAccessible(true);
+
+        // Get the method source code to verify it includes Cashier installation check
+        $filename = $reflection->getFileName();
+        $startLine = $method->getStartLine();
+        $endLine = $method->getEndLine();
+
+        $source = file_get_contents($filename);
+        $lines = explode("\n", $source);
+        $methodSource = implode("\n", array_slice($lines, $startLine - 1, $endLine - $startLine + 1));
+
+        // Verify that the method includes Cashier installation check
+        $this->assertStringContainsString('class_exists', $methodSource, 'installCashier should check if Cashier is already installed');
+        $this->assertStringContainsString('CashierServiceProvider', $methodSource, 'installCashier should check for CashierServiceProvider');
+    }
 }

@@ -32,11 +32,18 @@ class InstallCommand extends Command
         // Install Spatie Permissions first (needed for migrations and seeder)
         $this->installPermissions();
 
-        // Publish Laravel Cashier migrations first (required for subscriptions)
-        $this->call('vendor:publish', [
-            '--tag' => 'cashier-migrations',
-            '--force' => $this->option('force'),
-        ]);
+        // Check if Cashier is already installed
+        $cashierAlreadyInstalled = class_exists('Laravel\\Cashier\\CashierServiceProvider');
+
+        if (!$cashierAlreadyInstalled) {
+            // Publish Laravel Cashier migrations first (required for subscriptions)
+            $this->call('vendor:publish', [
+                '--tag' => 'cashier-migrations',
+                '--force' => $this->option('force'),
+            ]);
+        } else {
+            $this->info('Laravel Cashier already installed, skipping migration publishing');
+        }
 
         // Publish our migrations (these depend on Cashier migrations)
         $this->call('vendor:publish', [
@@ -344,10 +351,15 @@ class InstallCommand extends Command
     {
         $this->info('Installing Laravel Cashier...');
 
-        // Publish Cashier migrations
-        $this->call('vendor:publish', [
-            '--tag' => 'cashier-migrations',
-        ]);
+        // Check if Cashier is already installed
+        if (class_exists('Laravel\\Cashier\\CashierServiceProvider')) {
+            $this->info('Laravel Cashier already installed, skipping migration publishing');
+        } else {
+            // Publish Cashier migrations
+            $this->call('vendor:publish', [
+                '--tag' => 'cashier-migrations',
+            ]);
+        }
 
         $this->info('✅ Laravel Cashier setup complete');
         $this->line('Don\'t forget to add your Stripe keys to your .env file:');
@@ -502,6 +514,22 @@ class InstallCommand extends Command
                 // Database connection issues, skip table checks
                 break;
             }
+        }
+
+        // Check for existing Stripe columns in users table
+        try {
+            if (Schema::hasTable('users')) {
+                $columns = Schema::getColumnListing('users');
+                $stripeColumns = ['stripe_id', 'pm_type', 'pm_last_four', 'trial_ends_at'];
+                $existingStripeColumns = array_intersect($columns, $stripeColumns);
+
+                if (!empty($existingStripeColumns)) {
+                    $columnList = implode(', ', $existingStripeColumns);
+                    $warnings[] = "Stripe columns already exist in users table: {$columnList} - Cashier migrations may fail";
+                }
+            }
+        } catch (\Exception $e) {
+            // Database connection issues, skip column checks
         }
 
         // Check for existing roles
