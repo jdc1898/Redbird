@@ -12,8 +12,16 @@ class RedbirdServiceProvider extends ServiceProvider
         // Merge package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/redbird.php', 'redbird');
 
-        // Merge custom guards into existing auth configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/auth-guards.php', 'auth');
+        // Add custom guards to Laravel's auth configuration
+        $this->app['config']->set('auth.guards.admin', [
+            'driver' => 'session',
+            'provider' => 'users',
+        ]);
+
+        $this->app['config']->set('auth.guards.tenant', [
+            'driver' => 'session',
+            'provider' => 'users',
+        ]);
     }
 
     public function boot(): void
