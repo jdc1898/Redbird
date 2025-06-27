@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\RoadmapItemResource\Pages;
+namespace App\Filament\Admin\Resources\RoadmapItemResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\RoadmapItemResource;
+use App\Filament\Admin\Resources\RoadmapItemResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

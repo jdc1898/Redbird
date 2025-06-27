@@ -1,9 +1,9 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\DiscountResource\Pages;
-use Fullstack\Redbird\Filament\Admin\Resources\DiscountResource\RelationManagers\CouponCodeRelationManager;
+use App\Filament\Admin\Resources\DiscountResource\Pages;
+use App\Filament\Admin\Resources\DiscountResource\RelationManagers\CouponCodeRelationManager;
 use App\Models\Discount;
 use DateTime;
 use Filament\Forms\Form;

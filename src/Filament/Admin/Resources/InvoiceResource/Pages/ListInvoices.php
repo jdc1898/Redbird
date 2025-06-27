@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\InvoiceResource\Pages;
+namespace App\Filament\Admin\Resources\InvoiceResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\InvoiceResource;
+use App\Filament\Admin\Resources\InvoiceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\PriceResource\Pages;
+namespace App\Filament\Admin\Resources\PriceResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\PriceResource;
+use App\Filament\Admin\Resources\PriceResource;
 use App\Models\Price;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Components\Tab;
-use Fullstack\Redbird\Filament\Admin\Widgets\PriceStatsWidget;
+use App\Filament\Admin\Widgets\PriceStatsWidget;
 
 class ListPrices extends ListRecords
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\AnnouncementResource\Pages;
+use App\Filament\Admin\Resources\AnnouncementResource\Pages;
 use App\Models\Announcement;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;

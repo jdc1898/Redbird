@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\TransactionResource\Pages;
+use App\Filament\Admin\Resources\TransactionResource\Pages;
 use App\Models\Transaction;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

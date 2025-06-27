@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\EmailProviderResource\Pages;
+use App\Filament\Admin\Resources\EmailProviderResource\Pages;
 use App\Models\EmailProvider;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

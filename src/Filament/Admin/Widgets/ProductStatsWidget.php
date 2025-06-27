@@ -1,6 +1,6 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Widgets;
+namespace App\Filament\Admin\Widgets;
 
 use App\Models\Product;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;

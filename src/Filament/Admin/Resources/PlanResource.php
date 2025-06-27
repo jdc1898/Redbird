@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\PlanResource\Pages;
+use App\Filament\Admin\Resources\PlanResource\Pages;
 use App\Models\Plan;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

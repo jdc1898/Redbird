@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\ProductResource\Pages;
+namespace App\Filament\Admin\Resources\ProductResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\ProductResource;
+use App\Filament\Admin\Resources\ProductResource;
 use App\Models\Product;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;

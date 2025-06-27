@@ -22,34 +22,37 @@ class FilamentNamespaceTest extends TestCase
             $content = file_get_contents($file);
             $relativePath = str_replace(__DIR__ . '/../src/', '', $file);
 
-            // Check that namespace starts with Fullstack\Redbird\Filament
+            // Check that namespace starts with App\Filament
             $this->assertStringContainsString(
-                'namespace Fullstack\Redbird\Filament',
+                'namespace App\Filament',
                 $content,
                 "File {$relativePath} should have correct namespace"
             );
 
-            // Check that it doesn't have the old App\Filament namespace
+            // Check that it doesn't have the old Fullstack\Redbird\Filament namespace
             $this->assertStringNotContainsString(
-                'namespace App\Filament',
+                'namespace Fullstack\Redbird\Filament',
                 $content,
-                "File {$relativePath} should not have old App\\Filament namespace"
+                "File {$relativePath} should not have old Fullstack\\Redbird\\Filament namespace"
             );
         }
     }
 
     public function test_sample_filament_classes_exist()
     {
-        // Test some specific classes to ensure they're properly namespaced
-        $testClasses = [
-            'Fullstack\Redbird\Filament\Admin\Forms\PriceForm',
-            'Fullstack\Redbird\Filament\Tenant\Resources\OrderResource',
+        // Test some specific files to ensure they're properly namespaced
+        $testFiles = [
+            __DIR__ . '/../src/Filament/Admin/Forms/PriceForm.php',
+            __DIR__ . '/../src/Filament/Tenant/Resources/OrderResource.php',
         ];
 
-        foreach ($testClasses as $class) {
-            $this->assertTrue(
-                class_exists($class),
-                "Class {$class} should exist with correct namespace"
+        foreach ($testFiles as $file) {
+            $this->assertFileExists($file, "File {$file} should exist");
+            $content = file_get_contents($file);
+            $this->assertStringContainsString(
+                'namespace App\\Filament',
+                $content,
+                "File {$file} should have correct App namespace"
             );
         }
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\ProductResource\RelationManagers;
+namespace App\Filament\Admin\Resources\ProductResource\RelationManagers;
 
-use Fullstack\Redbird\Filament\Admin\Forms\PriceForm;
+use App\Filament\Admin\Forms\PriceForm;
 use App\Models\Price;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;

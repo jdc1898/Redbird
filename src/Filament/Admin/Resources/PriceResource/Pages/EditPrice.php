@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\PriceResource\Pages;
+namespace App\Filament\Admin\Resources\PriceResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\PriceResource;
+use App\Filament\Admin\Resources\PriceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use App\Http\Controllers\Price\PriceController;

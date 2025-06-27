@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\DiscountResource\Pages;
+namespace App\Filament\Admin\Resources\DiscountResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\DiscountResource;
+use App\Filament\Admin\Resources\DiscountResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

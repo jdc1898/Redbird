@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\TransactionResource\Pages;
+namespace App\Filament\Admin\Resources\TransactionResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\TransactionResource;
+use App\Filament\Admin\Resources\TransactionResource;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;

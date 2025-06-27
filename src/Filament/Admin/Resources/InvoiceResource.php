@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\InvoiceResource\Pages;
+use App\Filament\Admin\Resources\InvoiceResource\Pages;
 use App\Models\Invoice;
 use Filament\Forms;
 use Filament\Forms\Components\Placeholder;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\BlogCategoryResource\Pages;
+namespace App\Filament\Admin\Resources\BlogCategoryResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\BlogCategoryResource;
+use App\Filament\Admin\Resources\BlogCategoryResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

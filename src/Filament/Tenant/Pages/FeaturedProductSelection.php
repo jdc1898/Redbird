@@ -1,6 +1,6 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Tenant\Pages;
+namespace App\Filament\Tenant\Pages;
 
 use App\Models\Plan;
 use Filament\Pages\Page;

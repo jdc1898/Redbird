@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\PriceResource\Pages;
+namespace App\Filament\Admin\Resources\PriceResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\PriceResource;
+use App\Filament\Admin\Resources\PriceResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePrice extends CreateRecord

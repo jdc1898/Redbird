@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\PlanResource\Pages;
+namespace App\Filament\Admin\Resources\PlanResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\PlanResource;
+use App\Filament\Admin\Resources\PlanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\AnnouncementResource\Pages;
+namespace App\Filament\Admin\Resources\AnnouncementResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\AnnouncementResource;
+use App\Filament\Admin\Resources\AnnouncementResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAnnouncement extends CreateRecord

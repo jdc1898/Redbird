@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\BlogCategoryResource\Pages;
+use App\Filament\Admin\Resources\BlogCategoryResource\Pages;
 use App\Models\BlogCategory;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;

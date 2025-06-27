@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\SubscriptionResource\Pages;
+use App\Filament\Admin\Resources\SubscriptionResource\Pages;
 use App\Models\Subscription;
 use DateTime;
 use Filament\Forms\Components\DateTimePicker;

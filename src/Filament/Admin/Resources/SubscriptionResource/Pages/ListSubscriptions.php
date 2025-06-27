@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\SubscriptionResource\Pages;
+namespace App\Filament\Admin\Resources\SubscriptionResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\SubscriptionResource;
+use App\Filament\Admin\Resources\SubscriptionResource;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;

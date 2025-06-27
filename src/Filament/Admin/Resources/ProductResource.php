@@ -1,10 +1,10 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\ProductResource\Pages;
-use Fullstack\Redbird\Filament\Admin\Resources\ProductResource\RelationManagers\PriceRelationManager;
-use Fullstack\Redbird\Filament\Admin\Widgets\ProductStatsWidget;
+use App\Filament\Admin\Resources\ProductResource\Pages;
+use App\Filament\Admin\Resources\ProductResource\RelationManagers\PriceRelationManager;
+use App\Filament\Admin\Widgets\ProductStatsWidget;
     
 use App\Http\Controllers\Product\ProductController;
 use App\Jobs\SyncProductWithStripe;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Resources\PaymentProviderResource\Pages;
+use App\Filament\Admin\Resources\PaymentProviderResource\Pages;
 use App\Models\PaymentProvider;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

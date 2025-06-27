@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\OrderResource\Pages;
+namespace App\Filament\Admin\Resources\OrderResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\OrderResource;
+use App\Filament\Admin\Resources\OrderResource;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 

@@ -71,6 +71,9 @@ class InstallCommand extends Command
             if ($this->confirm('Would you like to set up demo data (admin, tenant, and member users)?', true)) {
                 $this->setupDemoData();
             }
+
+            // Create required models
+            $this->createRequiredModels();
         }
 
         // Install Filament
@@ -578,5 +581,45 @@ class InstallCommand extends Command
         } else {
             $this->warn('⚠️  User model does not exist');
         }
+    }
+
+    private function createRequiredModels(): void
+    {
+        $this->info('Copying required models from src/Models to app/Models...');
+
+        $srcModelsPath = base_path('src/Models');
+        $appModelsPath = app_path('Models');
+        $createdCount = 0;
+        $skippedCount = 0;
+
+        if (!File::exists($srcModelsPath)) {
+            $this->warn('No models found in src/Models.');
+            return;
+        }
+
+        $modelFiles = File::files($srcModelsPath);
+        foreach ($modelFiles as $file) {
+            $modelName = $file->getFilename();
+            $targetPath = $appModelsPath . '/' . $modelName;
+
+            if (File::exists($targetPath)) {
+                $this->line("  ℹ️  Model {$modelName} already exists, skipping...");
+                $skippedCount++;
+                continue;
+            }
+
+            // Read and update namespace
+            $content = File::get($file->getPathname());
+            $content = preg_replace('/namespace\\s+[^;]+;/', 'namespace App\\Models;', $content);
+            // Create Models directory if it doesn't exist
+            if (!File::exists($appModelsPath)) {
+                File::makeDirectory($appModelsPath, 0755, true);
+            }
+            File::put($targetPath, $content);
+            $this->info("  ✅ Copied model: {$modelName}");
+            $createdCount++;
+        }
+
+        $this->info("✅ Models copied: {$createdCount}, skipped: {$skippedCount}");
     }
 }

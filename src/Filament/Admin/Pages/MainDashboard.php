@@ -1,6 +1,6 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Pages;
+namespace App\Filament\Admin\Pages;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -44,9 +44,9 @@ class MainDashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
-            \Fullstack\Redbird\Filament\Admin\Widgets\MrrChartStatsWidget::class,
-            \Fullstack\Redbird\Filament\Admin\Widgets\MrrStatsWidget::class,
-            \Fullstack\Redbird\Filament\Admin\Widgets\ActiveSubscriptionsWidget::class,
+            \App\Filament\Admin\Widgets\MrrChartStatsWidget::class,
+            \App\Filament\Admin\Widgets\MrrStatsWidget::class,
+            \App\Filament\Admin\Widgets\ActiveSubscriptionsWidget::class,
         ];
     }
 

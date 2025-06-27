@@ -171,6 +171,7 @@ class InstallCommandTest extends TestCase
 
         $this->assertTrue(is_dir($adminPath), 'Admin Filament resources should exist');
         $this->assertTrue(is_dir($tenantPath), 'Tenant Filament resources should exist');
+        $this->assertTrue(is_dir($memberPath), 'Member Filament directory should exist (even if empty)');
 
         // Check that Admin has resources
         $adminResourcesPath = $adminPath . '/Resources';
@@ -185,5 +186,16 @@ class InstallCommandTest extends TestCase
             $this->markTestSkipped('Member directory not found - this is expected in CI if the directory is empty and not tracked by Git');
         }
         $this->assertTrue(is_dir($memberPath), 'Member Filament directory should exist (even if empty)');
+    }
+
+    public function test_create_required_models_method_exists()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+
+        $this->assertTrue($reflection->hasMethod('createRequiredModels'), 'InstallCommand should have createRequiredModels method');
+
+        $method = $reflection->getMethod('createRequiredModels');
+        $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'createRequiredModels should be private');
     }
 }

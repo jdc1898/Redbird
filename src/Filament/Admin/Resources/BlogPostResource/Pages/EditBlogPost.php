@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\BlogPostResource\Pages;
+namespace App\Filament\Admin\Resources\BlogPostResource\Pages;
 
-use Fullstack\Redbird\Filament\Admin\Resources\BlogPostResource;
+use App\Filament\Admin\Resources\BlogPostResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

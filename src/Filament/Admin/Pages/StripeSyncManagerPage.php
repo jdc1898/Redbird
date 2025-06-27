@@ -1,6 +1,6 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Pages;
+namespace App\Filament\Admin\Pages;
 
 use App\Models\Product;
 use App\Models\StripeSyncLog;

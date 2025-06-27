@@ -1,8 +1,8 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Tenant\Resources\PaymentResource\Pages;
+namespace App\Filament\Tenant\Resources\PaymentResource\Pages;
 
-use Fullstack\Redbird\Filament\Tenant\Resources\PaymentResource;
+use App\Filament\Tenant\Resources\PaymentResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePayment extends CreateRecord

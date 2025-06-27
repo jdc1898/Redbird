@@ -1,9 +1,9 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources;
+namespace App\Filament\Admin\Resources;
 
-use Fullstack\Redbird\Filament\Admin\Forms\PriceForm;
-use Fullstack\Redbird\Filament\Admin\Resources\PriceResource\Pages;
+use App\Filament\Admin\Forms\PriceForm;
+use App\Filament\Admin\Resources\PriceResource\Pages;
 use App\Models\Price;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -15,7 +15,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Price\PriceController;
 use Illuminate\Database\Eloquent\Model;
-use Fullstack\Redbird\Filament\Admin\Widgets\PriceStatsWidget;
+use App\Filament\Admin\Widgets\PriceStatsWidget;
 
 class PriceResource extends Resource
 {

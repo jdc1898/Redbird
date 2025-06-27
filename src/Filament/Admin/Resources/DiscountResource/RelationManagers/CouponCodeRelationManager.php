@@ -1,6 +1,6 @@
 <?php
 
-namespace Fullstack\Redbird\Filament\Admin\Resources\DiscountResource\RelationManagers;
+namespace App\Filament\Admin\Resources\DiscountResource\RelationManagers;
 
 use App\Models\Discount;
 use App\Models\PromoCode;
