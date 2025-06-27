@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-#[ObservedBy([PromoCodeObserver::class])]
 class PromoCode extends Model
 {
     /** @use HasFactory<\Database\Factories\PromoCodeFactory> */
