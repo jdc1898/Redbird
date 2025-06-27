@@ -27,9 +27,7 @@ class {{ class }} extends PanelProvider
             ->path(config('redbird.panels.{{ panel_id }}.path'))
             ->login()
             ->authGuard(config('redbird.panels.{{ panel_id }}.guard'))
-            ->colors([
-                'primary' => config('redbird.panels.{{ panel_id }}.colors'),
-            ])
+            ->colors(config('redbird.panels.{{ panel_id }}.colors'))
             ->discoverResources(in: app_path('Filament/{{ class_directory }}/Resources'), for: 'App\\Filament\\{{ class_directory }}\\Resources')
             ->discoverPages(in: app_path('Filament/{{ class_directory }}/Pages'), for: 'App\\Filament\\{{ class_directory }}\\Pages')
             ->pages([
