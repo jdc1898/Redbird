@@ -41,6 +41,10 @@ git add .
 # Commit with message
 git commit -m "$COMMIT_MESSAGE"
 
+# Pull latest changes from remote to avoid divergent branches
+print_status "Pulling latest changes from remote..."
+git pull --rebase origin main
+
 # Push to main (this triggers the auto-release workflow)
 print_status "Pushing to main to trigger auto-release..."
 git push origin main
