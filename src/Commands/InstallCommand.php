@@ -57,7 +57,7 @@ class InstallCommand extends Command
         // Run the roles and permissions seeder
         $this->info('Seeding roles and permissions...');
         $this->call('db:seed', [
-            '--class' => 'Redbird\\Database\\Seeders\\RolesAndPermissionsSeeder',
+            '--class' => 'Database\\Seeders\\RolesAndPermissionsSeeder',
         ]);
         $this->info('✅ Roles and permissions seeded');
 
@@ -70,9 +70,7 @@ class InstallCommand extends Command
         $this->installPermissions();
 
         // Install Laravel Cashier
-        if ($this->confirm('Would you like to setup Laravel Cashier for payments?', true)) {
             $this->installCashier();
-        }
 
         $this->info('✅ Redbird package installed successfully!');
         $this->line('');
