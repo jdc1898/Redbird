@@ -75,9 +75,21 @@ class InstallCommand extends Command
         return self::SUCCESS;
     }
 
-        private function installFilament(): void
+    private function installFilament(): void
     {
         $this->info('Installing Filament...');
+
+        // Publish Filament assets (CSS, JS, etc.)
+        $this->call('vendor:publish', [
+            '--tag' => 'filament-assets',
+            '--force' => $this->option('force'),
+        ]);
+
+        // Publish Filament configuration
+        $this->call('vendor:publish', [
+            '--tag' => 'filament-config',
+            '--force' => $this->option('force'),
+        ]);
 
         // Generate panel providers from config
         $this->generatePanelProviders();
@@ -85,7 +97,7 @@ class InstallCommand extends Command
         $this->info('✅ Filament panels generated from config');
     }
 
-        private function generatePanelProviders(): void
+    private function generatePanelProviders(): void
     {
         $panels = config('redbird.panels', []);
 
@@ -178,7 +190,7 @@ class InstallCommand extends Command
         return str_replace(array_keys($replacements), array_values($replacements), $content);
     }
 
-        private function registerPanelProvider(string $providerName): void
+    private function registerPanelProvider(string $providerName): void
     {
         $providerClass = "App\\Providers\\Filament\\{$providerName}";
 

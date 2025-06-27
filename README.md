@@ -53,6 +53,7 @@ This command will:
 - Publish and run migrations
 - Generate Filament panel providers from config
 - Register panel providers in bootstrap/providers.php (Laravel 11+) or config/app.php
+- Publish Filament assets (CSS, JS) for proper styling
 - Configure Laravel Permissions
 - Set up Laravel Cashier (optional)
 
@@ -80,6 +81,20 @@ STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
 REDBIRD_SUBSCRIPTIONS_ENABLED=true
 REDBIRD_USER_REGISTRATION=true
 REDBIRD_EMAIL_VERIFICATION=true
+```
+
+### 5. Troubleshooting CSS Issues
+
+If you experience broken CSS in the admin panel, ensure Filament assets are properly published:
+
+```bash
+# Publish Filament assets manually if needed
+php artisan vendor:publish --tag=filament-assets
+
+# Clear cache and recompile assets
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
 ```
 
 ## Usage
@@ -176,11 +191,17 @@ You can publish specific assets using tags:
 # Publish configuration only
 php artisan vendor:publish --tag=redbird-config
 
+# Publish auth configuration (custom guards)
+php artisan vendor:publish --tag=redbird-auth
+
 # Publish migrations only
 php artisan vendor:publish --tag=redbird-migrations
 
 # Publish views only
 php artisan vendor:publish --tag=redbird-views
+
+# Publish Filament assets (CSS, JS)
+php artisan vendor:publish --tag=filament-assets
 
 # Force overwrite existing files
 php artisan redbird:install --force

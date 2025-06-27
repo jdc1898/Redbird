@@ -15,18 +15,6 @@ class RedbirdServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Add custom guards to Laravel's auth configuration
-        $guards = config('auth.guards', []);
-        $guards['admin'] = [
-            'driver' => 'session',
-            'provider' => 'users',
-        ];
-        $guards['tenant'] = [
-            'driver' => 'session',
-            'provider' => 'users',
-        ];
-        config(['auth.guards' => $guards]);
-
         // Register commands
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -38,6 +26,7 @@ class RedbirdServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/redbird.php' => config_path('redbird.php'),
         ], 'redbird-config');
+
 
         // Publish migrations
         $this->publishes([
