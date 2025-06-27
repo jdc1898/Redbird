@@ -96,10 +96,6 @@ class InstallCommand extends Command
         $this->call('config:clear');
         $this->call('cache:clear');
 
-        // Force composer to regenerate autoloader
-        $this->info('Regenerating autoloader...');
-        $this->call('composer', ['dump-autoload', '--no-interaction' => true]);
-
         // Clear additional caches
         $this->call('route:clear');
         $this->call('view:clear');
