@@ -8,6 +8,7 @@ use Fullstack\Redbird\Services\Redbird\Redbird;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class PriceController extends Controller
 {
