@@ -1,7 +1,7 @@
 {
     "name": "fullstack/redbird",
     "description": "A Laravel SaaS package with Filament admin panel, user management, and subscription billing",
-    "version": "0.2.14",
+    "version": "0.2.15",
     "keywords": ["laravel", "saas", "filament", "subscription", "billing", "admin"],
     "license": "MIT",
     "type": "library",
