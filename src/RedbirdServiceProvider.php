@@ -13,20 +13,7 @@ class RedbirdServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/redbird.php', 'redbird');
 
         // Merge custom guards into existing auth configuration
-        $this->mergeAuthGuards();
-    }
-
-    private function mergeAuthGuards(): void
-    {
-        $this->app['config']->set('auth.guards.admin', [
-            'driver' => 'session',
-            'provider' => 'users',
-        ]);
-
-        $this->app['config']->set('auth.guards.tenant', [
-            'driver' => 'session',
-            'provider' => 'users',
-        ]);
+        $this->mergeConfigFrom(__DIR__.'/../config/auth-guards.php', 'auth');
     }
 
     public function boot(): void
@@ -45,7 +32,7 @@ class RedbirdServiceProvider extends ServiceProvider
 
         // Publish auth guards configuration
         $this->publishes([
-            __DIR__.'/../config/guards.php' => config_path('auth-guards.php'),
+            __DIR__.'/../config/auth-guards.php' => config_path('auth-guards.php'),
         ], 'redbird-auth');
 
         // Publish migrations

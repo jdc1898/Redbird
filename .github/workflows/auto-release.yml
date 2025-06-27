@@ -139,12 +139,26 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
+      - name: Check if tag exists
+        id: tag_check
+        run: |
+          TAG_NAME="v${{ steps.new_version.outputs.new_version }}"
+          if git tag -l "$TAG_NAME" | grep -q "$TAG_NAME"; then
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+            echo "Tag $TAG_NAME already exists"
+          else
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+            echo "Tag $TAG_NAME does not exist"
+          fi
+
       - name: Create and push tag
+        if: steps.tag_check.outputs.tag_exists == 'false'
         run: |
           git tag -a "v${{ steps.new_version.outputs.new_version }}" -m "Release ${{ steps.new_version.outputs.new_version }}"
           git push origin "v${{ steps.new_version.outputs.new_version }}"
 
       - name: Create GitHub Release
+        if: steps.tag_check.outputs.tag_exists == 'false'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -175,3 +189,9 @@ jobs:
           echo "Release v${{ steps.new_version.outputs.new_version }} created successfully!"
           echo "Packagist will automatically update if webhook is configured."
           echo "Package URL: https://packagist.org/packages/fullstack/redbird"
+
+      - name: Skip release if tag exists
+        if: steps.tag_check.outputs.tag_exists == 'true'
+        run: |
+          echo "Tag v${{ steps.new_version.outputs.new_version }} already exists, skipping release creation"
+          echo "This usually means the release was already created in a previous run"
