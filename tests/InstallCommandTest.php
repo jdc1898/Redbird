@@ -46,4 +46,60 @@ class InstallCommandTest extends TestCase
         $this->assertStringContainsString('filament-assets', $methodSource, 'installFilament should publish filament-assets');
         $this->assertStringContainsString('filament-config', $methodSource, 'installFilament should publish filament-config');
     }
+
+    public function test_installation_process_includes_all_required_steps()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+        $method = $reflection->getMethod('handle');
+        $method->setAccessible(true);
+
+        // Get the method source code to verify it includes all required steps
+        $filename = $reflection->getFileName();
+        $startLine = $method->getStartLine();
+        $endLine = $method->getEndLine();
+
+        $source = file_get_contents($filename);
+        $lines = explode("\n", $source);
+        $methodSource = implode("\n", array_slice($lines, $startLine - 1, $endLine - $startLine + 1));
+
+        // Verify that the installation includes all required steps
+        $this->assertStringContainsString('redbird-config', $methodSource, 'Installation should publish redbird-config');
+        $this->assertStringContainsString('installPermissions', $methodSource, 'Installation should call installPermissions');
+        $this->assertStringContainsString('cashier-migrations', $methodSource, 'Installation should publish cashier-migrations');
+        $this->assertStringContainsString('redbird-migrations', $methodSource, 'Installation should publish redbird-migrations');
+        $this->assertStringContainsString('redbird-seeders', $methodSource, 'Installation should publish redbird-seeders');
+        $this->assertStringContainsString('redbird-views', $methodSource, 'Installation should publish redbird-views');
+        $this->assertStringContainsString('migrate', $methodSource, 'Installation should run migrations');
+        $this->assertStringContainsString('RolesAndPermissionsSeeder', $methodSource, 'Installation should run the seeder');
+        $this->assertStringContainsString('installFilament', $methodSource, 'Installation should call installFilament');
+        $this->assertStringContainsString('installCashier', $methodSource, 'Installation should call installCashier');
+    }
+
+    public function test_config_file_has_required_sections()
+    {
+        $config = include __DIR__ . '/../config/redbird.php';
+
+        // Check that all required sections exist
+        $this->assertArrayHasKey('app_name', $config, 'Config should have app_name');
+        $this->assertArrayHasKey('panels', $config, 'Config should have panels section');
+        $this->assertArrayHasKey('subscriptions', $config, 'Config should have subscriptions section');
+        $this->assertArrayHasKey('tenancy', $config, 'Config should have tenancy section');
+        $this->assertArrayHasKey('features', $config, 'Config should have features section');
+        $this->assertArrayHasKey('permissions', $config, 'Config should have permissions section');
+        $this->assertArrayHasKey('roles', $config, 'Config should have roles section');
+        $this->assertArrayHasKey('seed', $config, 'Config should have seed section');
+    }
+
+    public function test_seeder_file_exists_and_has_correct_namespace()
+    {
+        $seederPath = __DIR__ . '/../database/seeders/RolesAndPermissionsSeeder.php';
+        $this->assertTrue(file_exists($seederPath), 'RolesAndPermissionsSeeder should exist');
+
+        $seederContent = file_get_contents($seederPath);
+        $this->assertStringContainsString('namespace Database\\Seeders;', $seederContent, 'Seeder should have correct namespace');
+        $this->assertStringContainsString('class RolesAndPermissionsSeeder', $seederContent, 'Seeder should have correct class name');
+        $this->assertStringContainsString('extends Seeder', $seederContent, 'Seeder should extend Seeder');
+        $this->assertStringContainsString('config(\'redbird.seed\'', $seederContent, 'Seeder should use redbird.seed config');
+    }
 }

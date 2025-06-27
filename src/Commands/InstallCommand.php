@@ -21,11 +21,8 @@ class InstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
-        // Publish auth guards configuration
-        $this->call('vendor:publish', [
-            '--tag' => 'redbird-auth',
-            '--force' => $this->option('force'),
-        ]);
+        // Install Spatie Permissions first (needed for migrations and seeder)
+        $this->installPermissions();
 
         // Publish Laravel Cashier migrations first (required for subscriptions)
         $this->call('vendor:publish', [
@@ -52,25 +49,24 @@ class InstallCommand extends Command
         ]);
 
         // Run migrations
-        $this->call('migrate');
+        if ($this->confirm('Would you like to run the migrations now?', true)) {
+            $this->call('migrate');
 
-        // Run the roles and permissions seeder
-        $this->info('Seeding roles and permissions...');
-        $this->call('db:seed', [
-            '--class' => 'Database\\Seeders\\RolesAndPermissionsSeeder',
-        ]);
-        $this->info('✅ Roles and permissions seeded');
+            // Run the roles and permissions seeder
+            $this->info('Seeding roles and permissions...');
+            $this->call('db:seed', [
+                '--class' => 'Database\\Seeders\\RolesAndPermissionsSeeder',
+            ]);
+            $this->info('✅ Roles and permissions seeded');
+        }
 
         // Install Filament
         if ($this->confirm('Would you like to install Filament admin panel?', true)) {
             $this->installFilament();
         }
 
-        // Install Spatie Permissions
-        $this->installPermissions();
-
         // Install Laravel Cashier
-            $this->installCashier();
+        $this->installCashier();
 
         $this->info('✅ Redbird package installed successfully!');
         $this->line('');
