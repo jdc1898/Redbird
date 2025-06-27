@@ -2,8 +2,8 @@
 
 namespace Fullstack\Redbird\Services;
 
-use Fullstack\Redbird\Models\Product;
-use Fullstack\Redbird\Models\Price;
+use App\Models\Product;
+use App\Models\Price;
 
 class ProductPricingService
 {

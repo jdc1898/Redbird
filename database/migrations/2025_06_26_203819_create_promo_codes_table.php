@@ -1,6 +1,6 @@
 <?php
 
-use Fullstack\Redbird\Models\Discount;
+use App\Models\Discount;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

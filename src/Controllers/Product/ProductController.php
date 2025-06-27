@@ -3,8 +3,8 @@
 namespace Fullstack\Redbird\Controllers\Product;
 
 use Illuminate\Routing\Controller;
-use Fullstack\Redbird\Models\Price;
-use Fullstack\Redbird\Models\Product;
+use App\Models\Price;
+use App\Models\Product;
 use Fullstack\Redbird\Services\Redbird\Redbird;
 use Illuminate\Support\Facades\Validator;
 
