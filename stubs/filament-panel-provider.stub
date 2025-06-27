@@ -24,9 +24,9 @@ class {{ class }} extends PanelProvider
     {
         return $panel
             ->id('{{ panel_id }}')
-            ->path('{{ panel_path }}'){{ panel_domain }}
-            ->authGuard('{{ panel_id }}')
+            ->path(config('redbird.panels.{{ panel_id }}.path'))
             ->login()
+            ->authGuard(config('redbird.panels.{{ panel_id }}.guard'))
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -53,6 +53,6 @@ class {{ class }} extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]){{ auth_guard }};
+            ]);
     }
 }

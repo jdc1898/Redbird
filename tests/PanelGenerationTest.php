@@ -23,9 +23,9 @@ class PanelGenerationTest extends TestCase
         foreach ($panelsConfig as $panelId => $panelConfig) {
             $this->assertArrayHasKey('path', $panelConfig, "Panel {$panelId} should have 'path' key");
 
-            // Guard is optional, but if present should be an array
+            // Guard is optional, but if present should be a string
             if (isset($panelConfig['guard'])) {
-                $this->assertIsArray($panelConfig['guard'], "Panel {$panelId} guard should be an array");
+                $this->assertIsString($panelConfig['guard'], "Panel {$panelId} guard should be a string");
             }
         }
     }
@@ -53,7 +53,8 @@ class PanelGenerationTest extends TestCase
           $stubContent = file_get_contents($stubPath);
           $this->assertStringContainsString('{{ class }}', $stubContent, 'Stub should contain class placeholder');
           $this->assertStringContainsString('{{ panel_id }}', $stubContent, 'Stub should contain panel_id placeholder');
-          $this->assertStringContainsString('{{ panel_path }}', $stubContent, 'Stub should contain panel_path placeholder');
+          $this->assertStringContainsString('config(\'redbird.panels.{{ panel_id }}.path\')', $stubContent, 'Stub should contain config-based path');
+          $this->assertStringContainsString('config(\'redbird.panels.{{ panel_id }}.guard\')', $stubContent, 'Stub should contain config-based guard');
       }
     }
 }

@@ -32,17 +32,17 @@ return [
         'admin' => [
             'path' => env('REDBIRD_ADMIN_PATH', 'admin'),
             'domain' => env('REDBIRD_ADMIN_DOMAIN', null),
-            'guard' => ['admin'],
+            'guard' => 'admin',
         ],
         'tenant' => [
             'path' => env('REDBIRD_TENANT_PATH', 'tenant'),
             'domain' => env('REDBIRD_TENANT_DOMAIN', null),
-            'guard' => ['tenant'],
+            'guard' => 'tenant',
         ],
         'member' => [
             'path' => env('REDBIRD_MEMBER_PATH', 'member'),
             'domain' => env('REDBIRD_MEMBER_DOMAIN', null),
-            'guard' => ['web'],
+            'guard' => 'web',
         ],
     ],
 
