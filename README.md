@@ -160,37 +160,46 @@ php artisan vendor:publish --tag=redbird-config
 
 ## Releasing
 
-### Automated Releases
+### 🚀 Fully Automated Releases
 
-This package uses GitHub Actions for automated releases. When you create a GitHub release:
-
-1. **Create a new release** on GitHub with a tag (e.g., `v1.2.3`)
-2. **Publish the release** - this triggers the automated workflow
-3. The workflow will:
-   - Update `composer.json` version
-   - Create a GitHub release
-   - Push the updated version back to the repository
-
-### Manual Releases
-
-For manual releases, use the provided script:
+This package uses **fully automated releases**! Simply push to main and everything happens automatically:
 
 ```bash
-# Bump patch version (1.0.0 → 1.0.1)
-./scripts/bump-version.sh patch
-
-# Bump minor version (1.0.0 → 1.1.0)
-./scripts/bump-version.sh minor
-
-# Bump major version (1.0.0 → 2.0.0)
-./scripts/bump-version.sh major
+# Just commit and push - that's it!
+git add .
+git commit -m "Add new features"
+git push origin main
 ```
 
-The script will:
-- Update the version in `composer.json`
-- Commit the change
-- Create and push a git tag
-- You can then create a GitHub release from the tag
+**What happens automatically:**
+1. ✅ **Tests run** - CI ensures everything works
+2. ✅ **Version bumped** - Patch version auto-incremented
+3. ✅ **Git tag created** - Semantic versioning tag
+4. ✅ **GitHub release** - Professional release notes
+5. ✅ **Packagist updated** - Package available immediately
+
+### Quick Release Script
+
+For even easier releases, use the provided script:
+
+```bash
+# Auto-release with default message
+./scripts/release.sh
+
+# Auto-release with custom message
+./scripts/release.sh "Add authentication improvements"
+```
+
+### Manual Version Control (Optional)
+
+If you need manual control over version bumping:
+
+```bash
+# Manual version bump (creates tag immediately)
+./scripts/bump-version.sh patch   # 1.0.0 → 1.0.1
+./scripts/bump-version.sh minor   # 1.0.0 → 1.1.0
+./scripts/bump-version.sh major   # 1.0.0 → 2.0.0
+```
 
 ### Packagist Integration
 
@@ -198,7 +207,17 @@ To automatically publish to Packagist:
 
 1. **Configure Packagist webhook** to watch your GitHub repository
 2. **Set up auto-update** in your Packagist package settings
-3. When you create a GitHub release, Packagist will automatically update
+3. **That's it!** - Every push to main will update Packagist automatically
+
+### Workflow Details
+
+- **Trigger**: Push to `main` branch
+- **Exclusions**: Markdown files and workflow files don't trigger releases
+- **Versioning**: Auto-increments patch version (1.0.0 → 1.0.1)
+- **Testing**: Runs full test suite before release
+- **Security**: Performs security audits
+- **Tags**: Creates semantic version tags (v1.0.1)
+- **Releases**: Generates GitHub releases with changelog
 
 ## Testing
 

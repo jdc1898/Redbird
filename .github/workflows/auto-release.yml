@@ -1,0 +1,107 @@
+name: Auto Release
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - '.github/workflows/auto-release.yml'
+
+jobs:
+  auto-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, phar, tokenizer, xml, xmlwriter, zip
+          coverage: none
+
+      - name: Install Composer
+        uses: ramsey/composer-install@v4
+        with:
+          composer-options: --no-dev --optimize-autoloader
+
+      - name: Get current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(composer config version)
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT_VERSION"
+
+      - name: Calculate new version
+        id: new_version
+        run: |
+          CURRENT_VERSION=${{ steps.current_version.outputs.current_version }}
+          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+
+          # Auto-increment patch version
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Update composer.json version
+        run: |
+          composer config version ${{ steps.new_version.outputs.new_version }}
+          echo "Updated composer.json version to ${{ steps.new_version.outputs.new_version }}"
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and push version update
+        run: |
+          git add composer.json
+          git commit -m "Auto-bump version to ${{ steps.new_version.outputs.new_version }}"
+          git push
+
+      - name: Create and push tag
+        run: |
+          git tag -a "v${{ steps.new_version.outputs.new_version }}" -m "Release ${{ steps.new_version.outputs.new_version }}"
+          git push origin "v${{ steps.new_version.outputs.new_version }}"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.new_version.outputs.new_version }}
+          release_name: Release ${{ steps.new_version.outputs.new_version }}
+          body: |
+            ## Release ${{ steps.new_version.outputs.new_version }}
+
+            ### What's Changed
+            - Automated release via GitHub Actions
+            - Version bumped to ${{ steps.new_version.outputs.new_version }}
+
+            ### Installation
+            ```bash
+            composer require fullstack/redbird:${{ steps.new_version.outputs.new_version }}
+            ```
+
+            ### Changelog
+            This release includes all changes since the last release.
+
+            **Note:** This is an automated release. For detailed changelog, please check the commit history.
+          draft: false
+          prerelease: false
+
+      - name: Notify Packagist
+        run: |
+          echo "Release v${{ steps.new_version.outputs.new_version }} created successfully!"
+          echo "Packagist will automatically update if webhook is configured."
+          echo "Package URL: https://packagist.org/packages/fullstack/redbird"
