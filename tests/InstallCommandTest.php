@@ -171,7 +171,7 @@ class InstallCommandTest extends TestCase
 
         $this->assertTrue(is_dir($adminPath), 'Admin Filament resources should exist');
         $this->assertTrue(is_dir($tenantPath), 'Tenant Filament resources should exist');
-        $this->assertTrue(is_dir($memberPath), 'Member Filament resources should exist');
+        $this->assertTrue(is_dir($memberPath), 'Member Filament directory should exist (even if empty)');
 
         // Check that Admin has resources
         $adminResourcesPath = $adminPath . '/Resources';
