@@ -201,6 +201,27 @@ class InstallCommandTest extends TestCase
         $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'createRequiredModels should be private');
     }
 
+    public function test_create_required_models_includes_class_existence_check()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+        $method = $reflection->getMethod('createRequiredModels');
+        $method->setAccessible(true);
+
+        // Get the method source code to verify it includes class existence check
+        $filename = $reflection->getFileName();
+        $startLine = $method->getStartLine();
+        $endLine = $method->getEndLine();
+
+        $source = file_get_contents($filename);
+        $lines = explode("\n", $source);
+        $methodSource = implode("\n", array_slice($lines, $startLine - 1, $endLine - $startLine + 1));
+
+        // Verify that the method includes class existence check
+        $this->assertStringContainsString('class_exists', $methodSource, 'createRequiredModels should check if model class already exists');
+        $this->assertStringContainsString('App\\\\Models', $methodSource, 'createRequiredModels should check for App\\Models namespace');
+    }
+
     public function test_view_components_exist_in_package()
     {
         $componentsPath = __DIR__ . '/../src/Resources/views/components';

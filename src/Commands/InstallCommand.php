@@ -36,9 +36,20 @@ class InstallCommand extends Command
         $cashierAlreadyInstalled = class_exists('Laravel\\Cashier\\CashierServiceProvider');
 
         if (!$cashierAlreadyInstalled) {
-            // Publish Laravel Cashier migrations first (required for subscriptions)
+            // Publish Cashier migrations
             $this->call('vendor:publish', [
                 '--tag' => 'cashier-migrations',
+                '--force' => $this->option('force'),
+            ]);
+
+            // Publish Cashier config and other assets
+            $this->call('vendor:publish', [
+                '--tag' => 'cashier-config',
+                '--force' => $this->option('force'),
+            ]);
+
+            $this->call('vendor:publish', [
+                '--tag' => 'cashier-views',
                 '--force' => $this->option('force'),
             ]);
         } else {
@@ -359,6 +370,15 @@ class InstallCommand extends Command
             $this->call('vendor:publish', [
                 '--tag' => 'cashier-migrations',
             ]);
+
+            // Publish Cashier config and other assets
+            $this->call('vendor:publish', [
+                '--tag' => 'cashier-config',
+            ]);
+
+            $this->call('vendor:publish', [
+                '--tag' => 'cashier-views',
+            ]);
         }
 
         $this->info('✅ Laravel Cashier setup complete');
@@ -635,9 +655,18 @@ class InstallCommand extends Command
         foreach ($modelFiles as $file) {
             $modelName = $file->getFilename();
             $targetPath = $appModelsPath . '/' . $modelName;
+            $className = 'App\\Models\\' . pathinfo($modelName, PATHINFO_FILENAME);
 
+            // Check if the model class already exists
+            if (class_exists($className)) {
+                $this->line("  ℹ️  Model class {$className} already exists, skipping...");
+                $skippedCount++;
+                continue;
+            }
+
+            // Also check if the file exists (for cases where class might not be autoloaded yet)
             if (File::exists($targetPath)) {
-                $this->line("  ℹ️  Model {$modelName} already exists, skipping...");
+                $this->line("  ℹ️  Model file {$modelName} already exists, skipping...");
                 $skippedCount++;
                 continue;
             }
