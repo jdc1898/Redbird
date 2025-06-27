@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor('App\Models\Subscription')
-                ->constrained()
+            $table->foreignId('subscription_id')
+                ->constrained('subscriptions')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

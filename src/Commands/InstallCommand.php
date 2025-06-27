@@ -659,16 +659,23 @@ class InstallCommand extends Command
         $createdCount = 0;
         $skippedCount = 0;
 
+        $this->line("Source models path: {$srcModelsPath}");
+        $this->line("Target models path: {$appModelsPath}");
+
         if (!File::exists($srcModelsPath)) {
             $this->warn('No models found in src/Models.');
             return;
         }
 
         $modelFiles = File::files($srcModelsPath);
+        $this->line("Found " . count($modelFiles) . " model files");
+
         foreach ($modelFiles as $file) {
             $modelName = $file->getFilename();
             $targetPath = $appModelsPath . '/' . $modelName;
             $className = 'App\\Models\\' . pathinfo($modelName, PATHINFO_FILENAME);
+
+            $this->line("Processing model: {$modelName} -> {$className}");
 
             // Check if the model class already exists
             if (class_exists($className)) {
@@ -690,6 +697,7 @@ class InstallCommand extends Command
             // Create Models directory if it doesn't exist
             if (!File::exists($appModelsPath)) {
                 File::makeDirectory($appModelsPath, 0755, true);
+                $this->line("  ✅ Created Models directory: {$appModelsPath}");
             }
             File::put($targetPath, $content);
             $this->info("  ✅ Copied model: {$modelName}");
@@ -697,6 +705,18 @@ class InstallCommand extends Command
         }
 
         $this->info("✅ Models copied: {$createdCount}, skipped: {$skippedCount}");
+
+        // Verify that key models were copied and can be loaded
+        $this->line("Verifying model copying...");
+        $keyModels = ['BlogCategory', 'BlogPost', 'Product', 'Price'];
+        foreach ($keyModels as $modelName) {
+            $className = 'App\\Models\\' . $modelName;
+            if (class_exists($className)) {
+                $this->line("  ✅ {$className} is available");
+            } else {
+                $this->warn("  ⚠️  {$className} is NOT available");
+            }
+        }
     }
 
     private function copyAttributes(): void

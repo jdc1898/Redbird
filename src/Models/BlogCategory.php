@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Fullstack\Redbird\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +22,6 @@ class BlogCategory extends Model
 
     public function posts()
     {
-        return $this->hasMany(BlogPost::class);
+        return $this->hasMany(\Fullstack\Redbird\Models\BlogPost::class);
     }
 }

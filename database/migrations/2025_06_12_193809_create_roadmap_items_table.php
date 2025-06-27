@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('status')->default('planned');
             $table->string('type')->default('feature');
             $table->unsignedInteger('upvotes')->default(0);
-            $table->foreignIdFor('App\Models\User')
-                ->constrained()
+            $table->foreignId('user_id')
+                ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->timestamps();

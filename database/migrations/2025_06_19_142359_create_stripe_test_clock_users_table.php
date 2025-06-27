@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('stripe_test_clock_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor('App\Models\User')
-                ->constrained()
+            $table->foreignId('user_id')
+                ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('stripe_test_clock_id');

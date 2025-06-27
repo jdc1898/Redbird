@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('promo_id')->nullable()->unique();
             $table->boolean('active')->default(true);
             $table->string('code');
-            $table->foreignIdFor('App\Models\Discount')
-                ->constrained()
+            $table->foreignId('discount_id')
+                ->constrained('discounts')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->foreignId('user_id')

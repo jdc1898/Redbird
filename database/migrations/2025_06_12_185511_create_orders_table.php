@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor('App\Models\User')
-                ->constrained()
+            $table->foreignId('user_id')
+                ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('status')->default('pending')->index();

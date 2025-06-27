@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('currency')->default('usd');
             $table->json('metadata')->nullable();
             $table->string('nickname')->nullable();
-            $table->foreignIdFor('App\Models\Product')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('product_id')
+                ->constrained('products')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->json('recurring')->nullable();
             $table->enum('tax_behavior', ['inclusive', 'exclusive', 'unspecified'])->nullable();
             $table->enum('type', ['one_time', 'recurring'])->nullable();

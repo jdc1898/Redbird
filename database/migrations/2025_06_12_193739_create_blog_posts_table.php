@@ -17,12 +17,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('content');
             $table->string('slug')->unique();
-            $table->foreignIdFor('App\Models\BlogCategory')
-                ->constrained()
+            $table->foreignId('category_id')
+                ->constrained('blog_categories')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignIdFor('App\Models\User')
-                ->constrained()
+            $table->foreignId('user_id')
+                ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('image')->nullable();
