@@ -89,7 +89,8 @@ jobs:
       - name: Get current version
         id: current_version
         run: |
-          CURRENT_VERSION=$(composer config version)
+          # Read version directly from composer.json
+          CURRENT_VERSION=$(grep '"version"' composer.json | sed 's/.*"version": "\([^"]*\)".*/\1/')
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $CURRENT_VERSION"
 
@@ -150,42 +151,3 @@ jobs:
           echo "Release v${{ steps.new_version.outputs.new_version }} created successfully!"
           echo "Packagist will automatically update if webhook is configured."
           echo "Package URL: https://packagist.org/packages/fullstack/redbird"
-
-      - name: Notify Slack
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          channel: '#deployments'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          text: |
-            🚀 Redbird Package Release
-            Status: ${{ job.status }}
-            Version: ${{ steps.new_version.outputs.new_version }}
-            Branch: ${{ github.ref }}
-            Commit: ${{ github.sha }}
-            Author: ${{ github.actor }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notify Email
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Redbird Package Release - ${{ job.status }}"
-          to: ${{ secrets.NOTIFICATION_EMAIL }}
-          from: "GitHub Actions"
-          body: |
-            🚀 Redbird Package Release
-
-            Status: ${{ job.status }}
-            Version: ${{ steps.new_version.outputs.new_version }}
-            Branch: ${{ github.ref }}
-            Author: ${{ github.actor }}
-            Commit: ${{ github.sha }}
-
-            View workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
