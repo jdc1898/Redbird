@@ -79,6 +79,29 @@ class InstallCommand extends Command
     {
         $this->info('Installing Filament...');
 
+        // Run Filament install command
+        try {
+            $this->info('Running filament:install...');
+            $this->call('filament:install', [
+                '--no-interaction' => true,
+            ]);
+            $this->info('✅ Filament install completed');
+        } catch (\Exception $e) {
+            $this->warn('Filament install command failed: ' . $e->getMessage());
+
+            // Try alternative command names
+            try {
+                $this->info('Trying filament:install-panels...');
+                $this->call('filament:install-panels', [
+                    '--no-interaction' => true,
+                ]);
+                $this->info('✅ Filament panels install completed');
+            } catch (\Exception $e2) {
+                $this->warn('Alternative Filament install command also failed: ' . $e2->getMessage());
+                $this->warn('You may need to run "php artisan filament:install --no-interaction" manually');
+            }
+        }
+
         // Publish Filament assets (CSS, JS, etc.)
         $this->call('vendor:publish', [
             '--tag' => 'filament-assets',
