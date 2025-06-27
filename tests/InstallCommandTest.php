@@ -102,4 +102,42 @@ class InstallCommandTest extends TestCase
         $this->assertStringContainsString('extends Seeder', $seederContent, 'Seeder should extend Seeder');
         $this->assertStringContainsString('config(\'redbird.seed\'', $seederContent, 'Seeder should use redbird.seed config');
     }
+
+    public function test_setup_demo_data_method_exists()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+
+        $this->assertTrue($reflection->hasMethod('setupDemoData'), 'InstallCommand should have setupDemoData method');
+
+        $method = $reflection->getMethod('setupDemoData');
+        $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'setupDemoData should be private');
+    }
+
+    public function test_create_or_get_user_method_exists()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+
+        $this->assertTrue($reflection->hasMethod('createOrGetUser'), 'InstallCommand should have createOrGetUser method');
+
+        $method = $reflection->getMethod('createOrGetUser');
+        $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'createOrGetUser should be private');
+    }
+
+    public function test_config_has_correct_role_names()
+    {
+        $config = include __DIR__ . '/../config/redbird.php';
+        $seedConfig = $config['seed'];
+
+        // Check that the correct role names exist
+        $this->assertArrayHasKey('admin', $seedConfig, 'Config should have admin role');
+        $this->assertArrayHasKey('tenant', $seedConfig, 'Config should have tenant role');
+        $this->assertArrayHasKey('member', $seedConfig, 'Config should have member role');
+
+        // Check that role names match the keys
+        $this->assertEquals('admin', $seedConfig['admin']['name'], 'Admin role name should be "admin"');
+        $this->assertEquals('tenant', $seedConfig['tenant']['name'], 'Tenant role name should be "tenant"');
+        $this->assertEquals('member', $seedConfig['member']['name'], 'Member role name should be "member"');
+    }
 }

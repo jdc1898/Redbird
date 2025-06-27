@@ -4,6 +4,8 @@ namespace Fullstack\Redbird\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Fullstack\Redbird\Models\User;
+use Spatie\Permission\Models\Role;
 
 class InstallCommand extends Command
 {
@@ -58,6 +60,11 @@ class InstallCommand extends Command
                 '--class' => 'Database\\Seeders\\RolesAndPermissionsSeeder',
             ]);
             $this->info('✅ Roles and permissions seeded');
+
+            // Setup demo data
+            if ($this->confirm('Would you like to set up demo data (admin, tenant, and member users)?', true)) {
+                $this->setupDemoData();
+            }
         }
 
         // Install Filament
@@ -72,8 +79,8 @@ class InstallCommand extends Command
         $this->line('');
         $this->line('Next steps:');
         $this->line('1. Configure your .env file with database and payment settings');
-        $this->line('2. Create a Filament user: php artisan make:filament-user');
-        $this->line('3. Visit /admin to access the admin panel');
+        $this->line('2. Visit /admin to access the admin panel');
+        $this->line('3. Change default passwords for security');
 
         return self::SUCCESS;
     }
@@ -328,5 +335,59 @@ class InstallCommand extends Command
         $this->line('Don\'t forget to add your Stripe keys to your .env file:');
         $this->line('STRIPE_KEY=your-stripe-key');
         $this->line('STRIPE_SECRET=your-stripe-secret');
+    }
+
+    private function setupDemoData(): void
+    {
+        $this->info('Setting up demo data...');
+
+        // Create Admin User
+        $adminUser = $this->createOrGetUser('admin@example.com', 'Admin User');
+        $adminRole = Role::where('name', 'admin')->first();
+        if ($adminRole) {
+            $adminUser->assignRole($adminRole);
+            $this->info('✅ Created admin user: admin@example.com (password: password)');
+        }
+
+        // Create Tenant Admin User
+        $tenantUser = $this->createOrGetUser('tenant@example.com', 'Tenant Admin');
+        $tenantRole = Role::where('name', 'tenant')->first();
+        if ($tenantRole) {
+            $tenantUser->assignRole($tenantRole);
+            $this->info('✅ Created tenant admin user: tenant@example.com (password: password)');
+        }
+
+        // Create Member User
+        $memberUser = $this->createOrGetUser('member@example.com', 'Member User');
+        $memberRole = Role::where('name', 'member')->first();
+        if ($memberRole) {
+            $memberUser->assignRole($memberRole);
+            $this->info('✅ Created member user: member@example.com (password: password)');
+        }
+
+        $this->line('');
+        $this->line('Demo Users Created:');
+        $this->line('Admin: admin@example.com / password (Access: /admin)');
+        $this->line('Tenant: tenant@example.com / password (Access: /tenant)');
+        $this->line('Member: member@example.com / password (Access: /member)');
+        $this->line('');
+        $this->warn('⚠️  Remember to change these passwords for security!');
+        $this->line('');
+    }
+
+    private function createOrGetUser(string $email, string $name): User
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $name,
+                'email' => $email,
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+            ]);
+        }
+
+        return $user;
     }
 }

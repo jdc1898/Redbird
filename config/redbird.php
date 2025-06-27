@@ -158,10 +158,10 @@ return [
             ],
         ],
         'tenant' => [
-            'name' => 'tenant-admin',
+            'name' => 'tenant',
             'display_name' => 'Tenant Admin',
             'description' => 'An administrator with access to manage users, roles, and application settings.',
-            'role_guard' => 'tenant-',
+            'role_guard' => 'tenant',
             'guards' => [
                 [
                     'name' => 'tenant',
