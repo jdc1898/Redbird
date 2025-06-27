@@ -354,11 +354,21 @@ class InstallCommand extends Command
         $adminUser = $this->createOrGetUser('admin@example.com', 'Admin User');
         $adminRole = Role::where('name', 'admin')->first();
         if ($adminRole) {
-            if (!$adminUser->hasRole($adminRole)) {
-                $adminUser->assignRole($adminRole);
-                $this->info('✅ Assigned admin role to admin@example.com');
-            } else {
-                $this->info('ℹ️  admin@example.com already has admin role');
+            try {
+                if (method_exists($adminUser, 'hasRole') && !$adminUser->hasRole($adminRole)) {
+                    $adminUser->assignRole($adminRole);
+                    $this->info('✅ Assigned admin role to admin@example.com');
+                } else {
+                    $this->info('ℹ️  admin@example.com already has admin role');
+                }
+            } catch (\Exception $e) {
+                // Fallback: try direct assignment
+                try {
+                    $adminUser->assignRole($adminRole);
+                    $this->info('✅ Assigned admin role to admin@example.com');
+                } catch (\Exception $e2) {
+                    $this->warn('⚠️  Could not assign admin role: ' . $e2->getMessage());
+                }
             }
         }
 
@@ -366,11 +376,21 @@ class InstallCommand extends Command
         $tenantUser = $this->createOrGetUser('tenant@example.com', 'Tenant Admin');
         $tenantRole = Role::where('name', 'tenant')->first();
         if ($tenantRole) {
-            if (!$tenantUser->hasRole($tenantRole)) {
-                $tenantUser->assignRole($tenantRole);
-                $this->info('✅ Assigned tenant role to tenant@example.com');
-            } else {
-                $this->info('ℹ️  tenant@example.com already has tenant role');
+            try {
+                if (method_exists($tenantUser, 'hasRole') && !$tenantUser->hasRole($tenantRole)) {
+                    $tenantUser->assignRole($tenantRole);
+                    $this->info('✅ Assigned tenant role to tenant@example.com');
+                } else {
+                    $this->info('ℹ️  tenant@example.com already has tenant role');
+                }
+            } catch (\Exception $e) {
+                // Fallback: try direct assignment
+                try {
+                    $tenantUser->assignRole($tenantRole);
+                    $this->info('✅ Assigned tenant role to tenant@example.com');
+                } catch (\Exception $e2) {
+                    $this->warn('⚠️  Could not assign tenant role: ' . $e2->getMessage());
+                }
             }
         }
 
@@ -378,11 +398,21 @@ class InstallCommand extends Command
         $memberUser = $this->createOrGetUser('member@example.com', 'Member User');
         $memberRole = Role::where('name', 'member')->first();
         if ($memberRole) {
-            if (!$memberUser->hasRole($memberRole)) {
-                $memberUser->assignRole($memberRole);
-                $this->info('✅ Assigned member role to member@example.com');
-            } else {
-                $this->info('ℹ️  member@example.com already has member role');
+            try {
+                if (method_exists($memberUser, 'hasRole') && !$memberUser->hasRole($memberRole)) {
+                    $memberUser->assignRole($memberRole);
+                    $this->info('✅ Assigned member role to member@example.com');
+                } else {
+                    $this->info('ℹ️  member@example.com already has member role');
+                }
+            } catch (\Exception $e) {
+                // Fallback: try direct assignment
+                try {
+                    $memberUser->assignRole($memberRole);
+                    $this->info('✅ Assigned member role to member@example.com');
+                } catch (\Exception $e2) {
+                    $this->warn('⚠️  Could not assign member role: ' . $e2->getMessage());
+                }
             }
         }
 
@@ -413,7 +443,16 @@ class InstallCommand extends Command
             $this->info("ℹ️  User already exists: {$email}");
         }
 
+        // Refresh the model to ensure traits are loaded
+        $user = $this->refreshUserModel($user);
+
         return $user;
+    }
+
+    private function refreshUserModel($user)
+    {
+        $userClass = get_class($user);
+        return $userClass::find($user->id);
     }
 
     private function checkExistingApplication(): void
