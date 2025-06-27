@@ -11,21 +11,22 @@ class RedbirdServiceProvider extends ServiceProvider
     {
         // Merge package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/redbird.php', 'redbird');
-
-        // Add custom guards to Laravel's auth configuration
-        $this->app['config']->set('auth.guards.admin', [
-            'driver' => 'session',
-            'provider' => 'users',
-        ]);
-
-        $this->app['config']->set('auth.guards.tenant', [
-            'driver' => 'session',
-            'provider' => 'users',
-        ]);
     }
 
     public function boot(): void
     {
+        // Add custom guards to Laravel's auth configuration
+        $guards = config('auth.guards', []);
+        $guards['admin'] = [
+            'driver' => 'session',
+            'provider' => 'users',
+        ];
+        $guards['tenant'] = [
+            'driver' => 'session',
+            'provider' => 'users',
+        ];
+        config(['auth.guards' => $guards]);
+
         // Register commands
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -37,11 +38,6 @@ class RedbirdServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/redbird.php' => config_path('redbird.php'),
         ], 'redbird-config');
-
-        // Publish auth guards configuration
-        $this->publishes([
-            __DIR__.'/../config/auth-guards.php' => config_path('auth-guards.php'),
-        ], 'redbird-auth');
 
         // Publish migrations
         $this->publishes([
