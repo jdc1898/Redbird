@@ -440,27 +440,39 @@ class InstallCommand extends Command
         // Check for existing tables that might conflict
         $conflictingTables = ['products', 'prices', 'invoices', 'discounts', 'promo_codes'];
         foreach ($conflictingTables as $table) {
-            if (Schema::hasTable($table)) {
-                $warnings[] = "Table '{$table}' already exists - migration may fail";
+            try {
+                if (Schema::hasTable($table)) {
+                    $warnings[] = "Table '{$table}' already exists - migration may fail";
+                }
+            } catch (\Exception $e) {
+                // Database connection issues, skip table checks
+                break;
             }
         }
 
         // Check for existing roles
         if (class_exists('Spatie\\Permission\\Models\\Role')) {
-            $existingRoles = \Spatie\Permission\Models\Role::whereIn('name', ['admin', 'tenant', 'member'])->get();
-            if ($existingRoles->isNotEmpty()) {
-                $roleNames = $existingRoles->pluck('name')->implode(', ');
-                $warnings[] = "Roles already exist: {$roleNames} - they may be overwritten";
-            }
+            try {
+                if (Schema::hasTable('roles')) {
+                    $existingRoles = \Spatie\Permission\Models\Role::whereIn('name', ['admin', 'tenant', 'member'])->get();
+                    if ($existingRoles->isNotEmpty()) {
+                        $roleNames = $existingRoles->pluck('name')->implode(', ');
+                        $warnings[] = "Roles already exist: {$roleNames} - they may be overwritten";
+                    }
 
-            // Check if any users already have these roles
-            $userModel = config('auth.providers.users.model', 'App\\Models\\User');
-            if (class_exists($userModel) && method_exists($userModel, 'role')) {
-                $usersWithRoles = $userModel::role(['admin', 'tenant', 'member'])->get();
-                if ($usersWithRoles->isNotEmpty()) {
-                    $userEmails = $usersWithRoles->pluck('email')->implode(', ');
-                    $warnings[] = "Users already have these roles: {$userEmails}";
+                    // Check if any users already have these roles
+                    $userModel = config('auth.providers.users.model', 'App\\Models\\User');
+                    if (class_exists($userModel) && method_exists($userModel, 'role') && Schema::hasTable('model_has_roles')) {
+                        $usersWithRoles = $userModel::role(['admin', 'tenant', 'member'])->get();
+                        if ($usersWithRoles->isNotEmpty()) {
+                            $userEmails = $usersWithRoles->pluck('email')->implode(', ');
+                            $warnings[] = "Users already have these roles: {$userEmails}";
+                        }
+                    }
                 }
+            } catch (\Exception $e) {
+                // Database connection issues, skip role checks
+                $warnings[] = "Could not check existing roles due to database connection issues";
             }
         }
 

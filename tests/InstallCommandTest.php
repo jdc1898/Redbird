@@ -140,4 +140,15 @@ class InstallCommandTest extends TestCase
         $this->assertEquals('tenant', $seedConfig['tenant']['name'], 'Tenant role name should be "tenant"');
         $this->assertEquals('member', $seedConfig['member']['name'], 'Member role name should be "member"');
     }
+
+    public function test_check_existing_application_method_exists()
+    {
+        $command = new InstallCommand();
+        $reflection = new \ReflectionClass(InstallCommand::class);
+
+        $this->assertTrue($reflection->hasMethod('checkExistingApplication'), 'InstallCommand should have checkExistingApplication method');
+
+        $method = $reflection->getMethod('checkExistingApplication');
+        $this->assertEquals('private', \Reflection::getModifierNames($method->getModifiers())[0], 'checkExistingApplication should be private');
+    }
 }
